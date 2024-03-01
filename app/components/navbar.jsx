@@ -49,7 +49,7 @@ export default function Navbar(){
                         <li><a href="#"><i className="fa fa-user"></i> Account</a></li>
                         <li><a href="#"><i className="fa fa-star"></i> Wishlist</a></li>
                         <li><a href="checkout.html"><i className="fa fa-crosshairs"></i> Checkout</a></li>
-                        <li><a href="cart.html"><i className="fa fa-shopping-cart"></i> Cart</a></li>
+                        <li><Link to="/cart"><i className="fa fa-shopping-cart"></i> Cart</Link></li>
                         <li><Link to="/login"><i className="fa fa-lock"></i> Login</Link></li>
                     </ul>
                     </div>
@@ -80,7 +80,7 @@ export default function Navbar(){
                             <li><a href="shop.html">Products</a></li>
                             <li><a href="product-details.html">Product Details</a></li> 
                             <li><a href="checkout.html">Checkout</a></li> 
-                            <li><a href="cart.html">Cart</a></li> 
+                            <li><Link to="/cart">Cart</Link></li> 
                             <li><Link to="/login">Login</Link></li> 
                         </ul>
                         </li> 
@@ -91,13 +91,8 @@ export default function Navbar(){
                         </ul>
                         </li> 
                         <li><a href="404.html">404</a></li>
-                        <li><a href="contact-us.html">Contact</a></li>
+                        <li><Link to="/contact">Contact</Link></li>
                     </ul>
-                    </div>
-                </div>
-                <div className="col-sm-3">
-                    <div className="search_box pull-right">
-                    <input type="text" placeholder="Search"/>
                     </div>
                 </div>
                 </div>
