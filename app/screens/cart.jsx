@@ -2,7 +2,11 @@ import Navbar from "../components/navbar";
 import CartProduct from "../components/cart/cartProduct";
 import Footer from "../components/footer";
 
+
+
+
 export default function Cart(){
+    
     return(
         <>
             <Navbar/>
