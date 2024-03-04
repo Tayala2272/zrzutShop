@@ -4,28 +4,11 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 import { db } from "../../firebase"
 
-import { UserAuth } from '../hooks/auth';
-
+import {UserAuth} from "../hooks/auth"
   
 
 export default function Chat(){
-    const { googleSignIn, logOut, user } = UserAuth();
-  
-    const handleGoogleSignIn = async () => {
-      try {
-        await googleSignIn();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const handleLogOut = async () => {
-        try {
-          await logOut();
-        } catch (error) {
-          console.log(error);
-        }
-      };
-    
+    const {handleGoogleSignIn, handleLogOut, user} = UserAuth()
 
     function Wczytaj(){
         return (
@@ -44,7 +27,7 @@ export default function Chat(){
     return(
         <>
             {value ? value : <Wczytaj/>}
-            {user ? <button onClick={()=>handleLogOut()}>Wygloguj się</button> : <button onClick={()=>handleGoogleSignIn()}>Zaloguj się</button>}
+            {user ? <button onClick={()=>handleLogOut()}>Wygloguj się</button> : <button onClick={()=>handleGoogleSignIn()}>Zaloguj się z google</button>}
         </>
     )
 }

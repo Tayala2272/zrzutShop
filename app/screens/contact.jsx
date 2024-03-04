@@ -1,16 +1,9 @@
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
-
 
 
 export default function Contact(){
     return(
         <>
-            <Navbar/>
-
-
-
-            <div id="contact-page" className="container">
+            <div id="contact-page" className="container" style={{marginBottom:"200px"}}>
                 <div className="bg">
                     <div className="row">
                     <div className="col-sm-8">
@@ -70,8 +63,6 @@ export default function Contact(){
                 </div>
             </div>
 
-
-            <Footer/>
         </>
     )
 }

@@ -1,15 +1,22 @@
 
+import {UserAuth} from "../hooks/auth"
+import GoogleButton from 'react-google-button'
 
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
 
-
+  
 
 export default function Login(){
+    const {handleGoogleSignIn, user} = UserAuth()
+
+    // Jeśli jest zalogowany to przenosi na strone główną
+    const navigate = useNavigate();
+    if (user !== null) {
+        navigate('/')
+    }
+
     return (
         <>
-            <Navbar/>
-
 
             <section id="form">
             <div className="container">
@@ -28,7 +35,8 @@ export default function Login(){
                     <h2 className="or">OR</h2>
                 </div>
                 <div className="col-sm-4">
-                    <div className="signup-form">
+                    <GoogleButton onClick={()=>handleGoogleSignIn()}/>
+                    {/* <div className="signup-form">
                     <h2>New User Signup!</h2>
                     <form action="#">
                         <input type="text" placeholder="Name"/>
@@ -36,14 +44,12 @@ export default function Login(){
                         <input type="password" placeholder="Password"/>
                         <button type="submit" className="btn btn-default">Signup</button>
                     </form>
-                    </div>
+                    </div> */}
                 </div>
                 </div>
             </div>
             </section>
 
-
-            <Footer/>
         </>
     )
 }

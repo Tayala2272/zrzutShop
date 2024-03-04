@@ -6,6 +6,10 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
 // Auth
   import { AuthContextProvider } from '../app/hooks/auth';
 
+// Elements
+  import Navbar from '../app/components/navbar';
+  import Footer from '../app/components/footer';
+
 // strony
   import Index from '../app/screens'
   import Login from '../app/screens/login'
@@ -19,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
+        <Navbar/>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
@@ -27,6 +32,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<Error />} />
         </Routes>
+      <Footer/>
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>,

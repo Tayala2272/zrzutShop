@@ -1,9 +1,11 @@
 
 import { Link } from "react-router-dom";
 
-
+import {UserAuth} from "../hooks/auth"
 
 export default function Navbar(){
+    const { handleLogOut, user } = UserAuth()
+
     return(
         <header id="header">
             {/* <!-- header_top --> */}
@@ -46,11 +48,13 @@ export default function Navbar(){
                 <div className="col-sm-8">
                     <div className="shop-menu pull-right">
                     <ul className="nav navbar-nav">
+                    {user && <>
                         <li><a href="#"><i className="fa fa-user"></i> Account</a></li>
                         <li><a href="#"><i className="fa fa-star"></i> Wishlist</a></li>
                         <li><a href="checkout.html"><i className="fa fa-crosshairs"></i> Checkout</a></li>
                         <li><Link to="/cart"><i className="fa fa-shopping-cart"></i> Cart</Link></li>
-                        <li><Link to="/login"><i className="fa fa-lock"></i> Login</Link></li>
+                    </>}
+                        {user ? <li><a onClick={()=>handleLogOut()} style={{cursor:"pointer"}}><i className="fa fa-lock"></i> Log Out</a></li> : <li><Link to="/login"><i className="fa fa-lock"></i> Login</Link></li>}
                     </ul>
                     </div>
                 </div>
