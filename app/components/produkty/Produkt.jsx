@@ -3,6 +3,8 @@ import { useState } from "react";
 import { storage } from "../../../firebase";
 import { ref, getDownloadURL } from "firebase/storage";
 
+import { Link } from "react-router-dom";
+
 // Create a reference with an initial file path and name
 
 export default function Produkt({ price, name, img, id }){
@@ -14,7 +16,7 @@ export default function Produkt({ price, name, img, id }){
     )
     return (
         <div className="col-sm-4">
-            <a href="#">
+            <Link to={"/product/"+id}>
                 <div className="product-image-wrapper">
                     <div className="single-products">
                     <div className="productinfo text-center">
@@ -30,7 +32,7 @@ export default function Produkt({ price, name, img, id }){
                     </ul>
                     </div>
                 </div>
-            </a>
+            </Link>
         </div>
     )
 }

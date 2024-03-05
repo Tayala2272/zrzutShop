@@ -1,7 +1,7 @@
 
 import { collection, onSnapshot } from "firebase/firestore";
 
-import { db } from "../../firebase"
+import { db } from "../../../firebase"
 
 function main(category){
     let html = ``

@@ -6,6 +6,8 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
 // Auth
   import { AuthContextProvider } from '../app/hooks/auth';
 
+  import "../app/hooks/language"
+
 // Elements
   import Navbar from '../app/components/navbar';
   import Footer from '../app/components/footer';
@@ -17,6 +19,8 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
   import Contact from '../app/screens/contact';
   import Cart from '../app/screens/cart';
   import Chat from '../app/screens/chat';
+  import Product_detail from '../app/screens/product_detail';
+  import Add_product from '../app/components/admin/add_product';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -29,7 +33,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/product/:productId" element={<Product_detail />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/add-product" element={<Add_product />} />
           <Route path="*" element={<Error />} />
         </Routes>
       <Footer/>
