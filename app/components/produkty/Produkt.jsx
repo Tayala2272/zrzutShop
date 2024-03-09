@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 export default function Produkt({ price, name, img, id }){
     const [image,setImage] = useState("")
-    getDownloadURL(ref(storage, img)).then(
+    getDownloadURL(ref(storage, "products/"+img)).then(
         (res)=>{
             setImage(res)
         }
@@ -21,8 +21,8 @@ export default function Produkt({ price, name, img, id }){
                     <div className="single-products">
                     <div className="productinfo text-center">
                         <img src={image} alt="" />
-                        <h2>{price}</h2>
-                        <p>{name} {id}</p>
+                        <h2>{price}zł</h2>
+                        <p>{name}</p>
                         <a href="" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart"></i>Add to cart</a>
                     </div>
                     </div>

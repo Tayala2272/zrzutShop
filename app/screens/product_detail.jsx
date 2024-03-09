@@ -1,57 +1,50 @@
-import { useState } from "react";
-
-import { storage, db } from "../../firebase";
-import { ref, getDownloadURL } from "firebase/storage";
-import { doc, onSnapshot } from "firebase/firestore";
+import { useState ,useEffect } from "react";
+import { getDoc, doc } from 'firebase/firestore';
+import { ref, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../firebase';
 
 // import Sidebar from "../components/sidebar/sidebar";
 
 // import Fancybox from 'fancybox';
 
+import ImageGrid from "../components/produkty/imageGrid";
+
 import { useParams } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 
 export default function Product_detail(){
+    const [images, setImages] = useState([]);
+    const { productId } = useParams();
+    
+    const navigate = useNavigate();
+    useEffect(() => {
+        async function downloadProduct() {
+            try {
+                const docRef = doc(db, "products", productId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const imageNames = docSnap.data().otherImages;
+                    const imageUrlArray = await Promise.all(imageNames.map(async (imageName) => {
+                        const imageUrl = await getDownloadURL(ref(storage, `products/${imageName}`));
+                        return imageUrl;
+                    }));
+                    setImages(imageUrlArray);
+                } else {
+                    navigate('/error/'+productId)
+                }
+            } catch (error) {
+                console.error("Error downloading images:", error);
+            }
+        }
+        downloadProduct();
+    }, [productId]);
 
     const [image, setImage] = useState("images/product-details/1.jpg")
-    const [images, setImages] = useState([])
 
 
     function changeImage(img){
         setImage(img)
-    }
-
-    const { productId } = useParams();
-
-    onSnapshot(doc(db, "products", productId), (doc) => {
-        console.log(doc.data().otherImages)
-        // doc.data().otherImages.forEach(item => {
-        //     console.log(item)
-        //     getDownloadURL(ref(storage, "products/"+item)).then(
-        //         (res)=>{
-        //             setImages([...images, res])
-        //             console.log(images)
-        //         }
-        //     )
-        // }).then(()=>getImages());
-    });
-
-    const imageChunks = []
-
-    function getImages(){
-        for (let i = 0; i < images.length; i += 4) {
-            const chunk = images.slice(i, i + 4);
-        
-            imageChunks.push(
-                <div key={i} className="item">
-                    {chunk.map((image, index) => (
-                        <a key={index} style={{cursor:'pointer'}} onClick={()=>changeImage({image})}>
-                            <img src={image} alt="" />
-                        </a>
-                    ))}
-                </div>
-            );
-        }
     }
 
 
@@ -69,27 +62,7 @@ export default function Product_detail(){
                         </div>
                         <div id="similar-product" className="carousel slide" data-ride="carousel">
                             {/* Wrapper for slides */}
-                                {imageChunks}
-                            {/* <div className="carousel-inner">
-                                <div className="item active">
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar1.jpg")}><img src="images/product-details/similar1.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar2.jpg")}><img src="images/product-details/similar2.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar3.jpg")}><img src="images/product-details/similar3.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar3.jpg")}><img src="images/product-details/similar3.jpg" alt="" /></a>
-                                </div>
-                                <div className="item">
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar1.jpg")}><img src="images/product-details/similar1.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar2.jpg")}><img src="images/product-details/similar2.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar3.jpg")}><img src="images/product-details/similar3.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar3.jpg")}><img src="images/product-details/similar3.jpg" alt="" /></a>
-                                </div>
-                                <div className="item">
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar1.jpg")}><img src="images/product-details/similar1.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar2.jpg")}><img src="images/product-details/similar2.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar3.jpg")}><img src="images/product-details/similar3.jpg" alt="" /></a>
-                                    <a style={{cursor:"pointer"}} onClick={()=>changeImage("images/product-details/similar3.jpg")}><img src="images/product-details/similar3.jpg" alt="" /></a>
-                                </div>
-                            </div> */}
+                                <ImageGrid event={changeImage} images={images}/>
 
                             {/* Controls */}
                             <a className="left item-control" href="#similar-product" data-slide="prev">
