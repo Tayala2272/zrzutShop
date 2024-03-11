@@ -21,6 +21,8 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
   import Chat from '../app/screens/chat';
   import Product_detail from '../app/screens/product_detail';
   import Add_product from '../app/components/admin/add_product';
+  import Shop from '../app/screens/shop';
+  import About from '../app/screens/about';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -30,6 +32,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Navbar/>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />

@@ -13,17 +13,16 @@ export default function Sidebar(){
                     <Categories/>
 
 
-                <div className="brands_products">
+                {/* <div className="brands_products">
                 <h2>Brands</h2>
                 <div className="brands-name">
                     <ul className="nav nav-pills nav-stacked">
                     <li><a href=""> <span className="pull-right">(50)</span>Acne</a></li>
                     <li><a href=""> <span className="pull-right">(43)</span>Nike</a></li>
                     <li><a href=""> <span className="pull-right">(32)</span>Chuj</a></li>
-                    {/* Pozostałe marki */}
                     </ul>
                 </div>
-                </div>
+                </div> */}
                 <div className="price-range">
                     <h2>Price Range</h2>
                     <div className="well">

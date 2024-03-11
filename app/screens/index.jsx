@@ -4,7 +4,8 @@ import Produkty from "../components/produkty/Produkty"
 export default function Index(){
     return (
         <>
-            <Produkty/>
+            <h1>Strona główna!</h1>
+            {/* <Produkty/> */}
         </>
     )
 }

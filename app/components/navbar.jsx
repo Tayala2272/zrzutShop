@@ -49,7 +49,7 @@ export default function Navbar(){
                 <div className="row">
                 <div className="col-sm-4">
                     <div className="logo pull-left">
-                    <a href="index.html"><img src="./app/assets/home/logo.png" alt="" /></a>
+                    <a href="index.html"><img src="./app/assets/home/logo.png" alt=""/></a>
                     </div>
                 </div>
                 <div className="col-sm-8">
@@ -87,22 +87,8 @@ export default function Navbar(){
                     <div className="mainmenu pull-left">
                     <ul className="nav navbar-nav collapse navbar-collapse">
                         <li><Link to="/">Home</Link></li>
-                        <li className="dropdown"><a href="#">Shop<i className="fa fa-angle-down"></i></a>
-                        <ul role="menu" className="sub-menu">
-                            <li><a href="shop.html">Products</a></li>
-                            <li><a href="product-details.html">Product Details</a></li> 
-                            <li><a href="checkout.html">Checkout</a></li> 
-                            <li><Link to="/cart">Cart</Link></li> 
-                            <li><Link to="/login">Login</Link></li> 
-                        </ul>
-                        </li> 
-                        <li className="dropdown"><a href="#">Blog<i className="fa fa-angle-down"></i></a>
-                        <ul role="menu" className="sub-menu">
-                            <li><a href="blog.html">Blog List</a></li>
-                            <li><a href="blog-single.html">Blog Single</a></li>
-                        </ul>
-                        </li> 
-                        <li><a href="404.html">404</a></li>
+                        <li><Link to="/shop">Shop</Link></li>
+                        <li><Link to="/about">About</Link></li>
                         <li><Link to="/contact">Contact</Link></li>
                     </ul>
                     </div>
