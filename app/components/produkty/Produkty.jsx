@@ -1,10 +1,12 @@
 
 import { useState, useEffect } from "react";
 
+import { useParams } from 'react-router-dom'
+
 import Sidebar from "../sidebar/sidebar"
 import Produkt from "./Produkt"
 
-import { collection, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 
@@ -12,22 +14,62 @@ import { db } from "../../../firebase";
 export default function Produkty(){
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { category, subCategory } = useParams();
+
 
     useEffect(() => {
         async function downloadProduct() {
             try {
-                await getDocs(collection(db, "products")).then((res)=>{
-                    res.forEach((doc)=>{
-                        const price = doc.data().price
-                        const name = doc.data().productName
-                        const img = doc.data().thumbnailImage
-                        const id = doc.id
-                        setProducts([...products, {"id":id,"price":price,"name":name,"img":img}])
+                const collRef = collection(db, "products");
+                if (subCategory) {
+                    const q = query(collRef, where("category", "==", `${category}/${subCategory}`));
+                    await getDocs(q).then((querySnapshot) => {
+                        const products = [];
+                  
+                        querySnapshot.forEach((doc) => {
+                          const price = doc.data().price;
+                          const name = doc.data().productName;
+                          const img = doc.data().thumbnailImage;
+                          const id = doc.id;
+                  
+                          products.push({ id, price, name, img });
+                        });
+                  
+                        setProducts(products);
+                        setLoading(false);
+                      });
+                } else if (category) {
+                    const q = query(collRef, where("category", "array-contains", `${category}`));
+                    await getDocs(q).then((querySnapshot) => {
+                        const products = [];
+                  
+                        querySnapshot.forEach((doc) => {
+                          const price = doc.data().price;
+                          const name = doc.data().productName;
+                          const img = doc.data().thumbnailImage;
+                          const id = doc.id;
+                  
+                          products.push({ id, price, name, img });
+                        });
+                  
+                        setProducts(products);
+                        setLoading(false);
+                      });
+                }else{
+                    await getDocs(q).then((res)=>{
+                        res.forEach((doc)=>{
+                            const price = doc.data().price
+                            const name = doc.data().productName
+                            const img = doc.data().thumbnailImage
+                            const id = doc.id
+                            setProducts([...products, {"id":id,"price":price,"name":name,"img":img}])
+                        })
+                        setLoading(false)
                     })
-                    setLoading(false)
-                })
+                }
             } catch (error) {
                 console.error("Error downloading products:", error);
+                // Consider displaying a user-friendly error message in your UI
             }
         }
         downloadProduct();
