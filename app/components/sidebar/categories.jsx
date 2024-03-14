@@ -6,7 +6,6 @@ import { db } from "../../../firebase"
 function main(category){
     let html = ``
     for (const key in category){
-        console.log(category)
         if(typeof category[key]==='object'){
             html += `
             <div class="panel panel-default">
@@ -23,7 +22,7 @@ function main(category){
                         <ul>`
     
             for (const key2 in category[key]){
-                html += `<li><Link to="/shop/${category.text}/${category[key][key2]}">${category[key][key2]}</Link></li>`
+                html += `<li><a href="/shop/${category.text}/${category[key][key2]}">${category[key][key2]}</a></li>`
             }
             html += ` 
                         </ul>
@@ -34,7 +33,7 @@ function main(category){
             html += `
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title"><Link to="/shop/${category[key]}">${key}</Link></h4>
+                        <h4 class="panel-title"><a href="/shop/${category[key]}">${key}</a></h4>
                     </div>
                 </div>
             `

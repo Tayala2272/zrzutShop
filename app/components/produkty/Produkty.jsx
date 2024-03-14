@@ -38,25 +38,8 @@ export default function Produkty(){
                         setProducts(products);
                         setLoading(false);
                       });
-                } else if (category) {
-                    const q = query(collRef, where("category", "array-contains", `${category}`));
-                    await getDocs(q).then((querySnapshot) => {
-                        const products = [];
-                  
-                        querySnapshot.forEach((doc) => {
-                          const price = doc.data().price;
-                          const name = doc.data().productName;
-                          const img = doc.data().thumbnailImage;
-                          const id = doc.id;
-                  
-                          products.push({ id, price, name, img });
-                        });
-                  
-                        setProducts(products);
-                        setLoading(false);
-                      });
-                }else{
-                    await getDocs(q).then((res)=>{
+                } else{
+                    await getDocs(collRef).then((res)=>{
                         res.forEach((doc)=>{
                             const price = doc.data().price
                             const name = doc.data().productName
