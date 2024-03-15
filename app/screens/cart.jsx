@@ -1,11 +1,13 @@
 
+
 import CartProduct from "../components/cart/cartProduct";
 
 
 
 
 export default function Cart(){
-    
+
+
     return(
         <>
             <section id="cart_items">

@@ -11,6 +11,7 @@ import ImageGrid from "../components/produkty/imageGrid";
 
 import { useParams } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
+import Add_to_cart from "../hooks/add_to_cart";
 
 
 export default function Product_detail(){
@@ -56,37 +57,6 @@ export default function Product_detail(){
         setImage(img)
     }
 
-    const setCookie = (name, value) => {
-        const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
-    };
-    
-    const getCookie = (name) => {
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.split('=');
-            if (cookieName.trim() === name) {
-                return cookieValue;
-            }
-        }
-        return null;
-    };
-
-    function addToCart(id) {
-        if(typeof(amount)==='number' && amount>0){
-            const tmp = getCookie(id)
-            console.log(tmp)
-            if(tmp){
-                document.cookie = `${id}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-                setCookie(id,parseInt(amount)+parseInt(tmp))
-            }
-            else{
-                setCookie(id,amount)
-            }
-        }else{
-            alert("Do koszyka można dodać co najmniej jeden produkt")
-        }
-    }
 
 
 
@@ -124,7 +94,7 @@ export default function Product_detail(){
                                 <span>{product && product.price+"zł"}</span>
                                 <label>Quantity:</label>
                                 <input type="number" defaultValue="1" onChange={(num)=>setAmount(parseInt(num.target.value))}/>
-                                <button type="button" className="btn btn-fefault cart" onClick={()=>addToCart(productId)}>
+                                <button type="button" className="btn btn-fefault cart" onClick={()=>Add_to_cart(productId, amount).then((res)=>alert(res)).catch(err=>alert(err))}>
                                     <i className="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </button>
