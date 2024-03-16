@@ -58,7 +58,6 @@ export default function Produkty(){
         downloadProduct();
     }, []);
 
-    console.log(products)
 
     return (
         <div className='container'>

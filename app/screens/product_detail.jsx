@@ -3,6 +3,8 @@ import { getDoc, doc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 
+import { UserAuth } from "../hooks/auth"
+
 // import Sidebar from "../components/sidebar/sidebar";
 
 // import Fancybox from 'fancybox';
@@ -11,9 +13,13 @@ import ImageGrid from "../components/produkty/imageGrid";
 
 import { useParams } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
+import AddToCart from "../components/cart/addToCart";
 
 
 export default function Product_detail(){
+    const { user } = UserAuth()
+
+
     const [ images, setImages] = useState([]);
     const { productId } = useParams();
     const [ product, setProduct ] = useState()
@@ -72,21 +78,7 @@ export default function Product_detail(){
         return null;
     };
 
-    function addToCart(id) {
-        if(typeof(amount)==='number' && amount>0){
-            const tmp = getCookie(id)
-            console.log(tmp)
-            if(tmp){
-                document.cookie = `${id}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-                setCookie(id,parseInt(amount)+parseInt(tmp))
-            }
-            else{
-                setCookie(id,amount)
-            }
-        }else{
-            alert("Do koszyka można dodać co najmniej jeden produkt")
-        }
-    }
+    
 
 
 
@@ -124,7 +116,7 @@ export default function Product_detail(){
                                 <span>{product && product.price+"zł"}</span>
                                 <label>Quantity:</label>
                                 <input type="number" defaultValue="1" onChange={(num)=>setAmount(parseInt(num.target.value))}/>
-                                <button type="button" className="btn btn-fefault cart" onClick={()=>addToCart(productId)}>
+                                <button type="button" className="btn btn-fefault cart" onClick={()=>AddToCart(productId,amount,user).then((res)=>{alert(res)}).catch(err=>alert(err))}>
                                     <i className="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </button>
