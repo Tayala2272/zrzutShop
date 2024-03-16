@@ -15,6 +15,8 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import AddToCart from "../components/cart/addToCart";
 
+import Add_to_cart from "../hooks/add_to_cart";
+
 
 export default function Product_detail(){
     const { user } = UserAuth()
@@ -62,23 +64,6 @@ export default function Product_detail(){
         setImage(img)
     }
 
-    const setCookie = (name, value) => {
-        const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
-    };
-    
-    const getCookie = (name) => {
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.split('=');
-            if (cookieName.trim() === name) {
-                return cookieValue;
-            }
-        }
-        return null;
-    };
-
-    
 
 
 
