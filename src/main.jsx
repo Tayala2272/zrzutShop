@@ -23,12 +23,35 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
   import Add_product from '../app/components/admin/add_product';
   import Shop from '../app/screens/shop';
   import About from '../app/screens/about';
+  import Account from '../app/screens/account.jsx';
+
+// JS
+  import $ from 'jquery';
+  window.jQuery = $;
+  window.$ = $;
+  import '../app/assets/js/jquery.js';
+  import '../app/assets/js/bootstrap.min.js';
+  import '../app/assets/js/jquery.scrollUp.min.js';
+  import '../app/assets/js/price-range.js';
+  import '../app/assets/js/main.js';
+
+// CSS
+  import '../app/assets/css/bootstrap.min.css'; // Zaimportuj plik CSS
+  import '../app/assets/css/prettyPhoto.css'; // Zaimportuj plik CSS
+  import '../app/assets/css/price-range.css'; // Zaimportuj plik CSS
+  import '../app/assets/css/animate.css'; // Zaimportuj plik CSS
+  import '../app/assets/css/main.css'; // Zaimportuj plik CSS
+  import '../app/assets/css/responsive.css'; // Zaimportuj plik CSS
+
+
+// Firebase
+  import { AppContextProvider } from '../app/hooks/firebaseContext';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthContextProvider>
+      <AppContextProvider>
         <Navbar/>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -37,6 +60,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/shop/:category/:subCategory" element={<Shop />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/account" element={<Account />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product/:productId" element={<Product_detail />} />
@@ -44,8 +68,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/add-product" element={<Add_product />} />
           <Route path="*" element={<Error />} />
         </Routes>
-      <Footer/>
-      </AuthContextProvider>
+        <Footer/>
+      </AppContextProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

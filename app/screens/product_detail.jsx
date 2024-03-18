@@ -3,7 +3,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 
-import { UserAuth } from "../hooks/auth"
+import { AppContext } from "../hooks/firebaseContext";
 
 // import Sidebar from "../components/sidebar/sidebar";
 
@@ -15,17 +15,17 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import AddToCart from "../components/cart/addToCart";
 
-import Add_to_cart from "../hooks/add_to_cart";
-
 
 export default function Product_detail(){
-    const { user } = UserAuth()
+    const { user } = AppContext()
 
 
     const [ images, setImages] = useState([]);
     const { productId } = useParams();
     const [ product, setProduct ] = useState()
     const [ amount, setAmount ] = useState(1)
+
+    const [ thumbnailImg, setThumbnailImg ] = useState("")
     
     const navigate = useNavigate();
     useEffect(() => {
@@ -43,6 +43,7 @@ export default function Product_detail(){
                         setProduct(tmp)
                         setImages(imageUrlArray)
                         await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
+                            setThumbnailImg(tmp)
                             setImages([tmp, ...imageUrlArray])
                             setImage(tmp)
                         })
@@ -101,7 +102,7 @@ export default function Product_detail(){
                                 <span>{product && product.price+"zł"}</span>
                                 <label>Quantity:</label>
                                 <input type="number" defaultValue="1" onChange={(num)=>setAmount(parseInt(num.target.value))}/>
-                                <button type="button" className="btn btn-fefault cart" onClick={()=>AddToCart(productId,amount,user).then((res)=>{alert(res)}).catch(err=>alert(err))}>
+                                <button type="button" className="btn btn-fefault cart" onClick={()=>AddToCart(productId,amount,user,product.price,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))}>
                                     <i className="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </button>

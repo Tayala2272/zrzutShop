@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-import { UserAuth } from "../../hooks/auth"
+import { AppContext } from "../../hooks/firebaseContext";
 import { useNavigate } from "react-router-dom";
 
 import { db, firebase } from "../../../firebase"
@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default function Add_product(){
     //Sprawdzenie, czy konto należy do admina
         let admin = false
-        const { user } = UserAuth()
+        const { user } = AppContext()
         if(user){
             if(user.uid=="CUaWiLcro3Wl3OG80Wc277tXOuE3"){
                 admin = true

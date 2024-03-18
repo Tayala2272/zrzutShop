@@ -15,21 +15,21 @@ export default function Produkt({ price, name, img, id }){
         }
     )
     return (
-        <div className="col-sm-4">
+        <div className="col-sm-4 zoomIn" style={{}}>
             <Link to={"/product/"+id}>
                 <div className="product-image-wrapper">
                     <div className="single-products">
                     <div className="productinfo text-center">
                         <img src={image} alt="" />
-                        <h2>{price}zł</h2>
+                        <h2 style={{color:"black"}}>{price}zł</h2>
                         <p>{name}</p>
-                        <a href="" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart"></i>Add to cart</a>
+                        {/* <a href="" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart"></i>Add to cart</a> */}
                     </div>
                     </div>
                     <div className="choose">
-                    <ul className="nav nav-pills nav-justified">
+                    {/* <ul className="nav nav-pills nav-justified">
                         <li><a href=""><i className="fa fa-plus-square"></i>Add to wishlist</a></li>
-                    </ul>
+                    </ul> */}
                     </div>
                 </div>
             </Link>

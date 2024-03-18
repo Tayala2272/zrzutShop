@@ -3,21 +3,17 @@
 import CartProduct from "../components/cart/cartProduct";
 
 
+import { AppContext } from "../hooks/firebaseContext";
 
 
 export default function Cart(){
 
+    const { cart } = AppContext()
 
     return(
         <>
             <section id="cart_items">
             <div className="container">
-                <div className="breadcrumbs">
-                <ol className="breadcrumb">
-                    <li><a href="#">Home</a></li>
-                    <li className="active">Shopping Cart</li>
-                </ol>
-                </div>
                 <div className="table-responsive cart_info">
                 <table className="table table-condensed">
                     <thead>
@@ -31,18 +27,19 @@ export default function Cart(){
                     </tr>
                     </thead>
                     <tbody>
-                        <CartProduct name="Colorblock Scuba" price={59} amount={2} id={55952} image="one.png"/>
-                        <CartProduct name="Colorblock Scuba" price={23} amount={1} id={33952} image="two.png"/>
-                        <CartProduct name="Colorblock Scuba" price={99} amount={5} id={22952} image="three.png"/>
+                        {cart &&
+                            cart.map(item=>{return <CartProduct key={item.id} name={item.name} price={item.price} amount={item.amount} id={item.id} image={item.img}/>})
+                        }
                     </tbody>
                 </table>
                 </div>
             </div>
             </section>
             
+            <h4 className="text-center">Aby kupić orodukt, poczekaj aż dodamy opcje płatności</h4>
 
 
-            <section id="do_action">
+            {/* <section id="do_action">
             <div className="container">
                 <div className="heading">
                 <h3>What would you like to do next?</h3>
@@ -115,7 +112,7 @@ export default function Cart(){
                 </div>
                 </div>
             </div>
-            </section>
+            </section> */}
 
         </>
     )

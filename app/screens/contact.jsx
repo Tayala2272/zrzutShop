@@ -8,20 +8,20 @@ export default function Contact(){
                     <div className="row">
                     <div className="col-sm-8">
                         <div className="contact-form">
-                        <h2 className="title text-center">Get In Touch</h2>
+                        <h2 className="title text-center">Napisz do nas</h2>
                         <div className="status alert alert-success" style={{ display: 'none' }}></div>
                         <form id="main-contact-form" className="contact-form row" name="contact-form" method="post">
                             <div className="form-group col-md-6">
-                            <input type="text" name="name" className="form-control" required placeholder="Name" />
+                            <input type="text" name="name" className="form-control" required placeholder="Imie" />
                             </div>
                             <div className="form-group col-md-6">
                             <input type="email" name="email" className="form-control" required placeholder="Email" />
                             </div>
                             <div className="form-group col-md-12">
-                            <input type="text" name="subject" className="form-control" required placeholder="Subject" />
+                            <input type="text" name="subject" className="form-control" required placeholder="Temat" />
                             </div>
                             <div className="form-group col-md-12">
-                            <textarea name="message" id="message" required className="form-control" rows={8} placeholder="Your Message Here"></textarea>
+                            <textarea name="message" id="message" required className="form-control" rows={8} placeholder="Twoja wiadomość"></textarea>
                             </div>
                             <div className="form-group col-md-12">
                             <input type="submit" name="submit" className="btn btn-primary pull-right" value="Submit" />
@@ -31,17 +31,16 @@ export default function Contact(){
                     </div>
                     <div className="col-sm-4">
                         <div className="contact-info">
-                        <h2 className="title text-center">Contact Info</h2>
+                        <h2 className="title text-center">Kontakt</h2>
                         <address>
-                            <p>E-Shopper Inc.</p>
-                            <p>935 W. Webster Ave New Streets Chicago, IL 60614, NY</p>
-                            <p>Newyork USA</p>
-                            <p>Mobile: +2346 17 38 93</p>
-                            <p>Fax: 1-714-252-0026</p>
-                            <p>Email: info@e-shopper.com</p>
+                            <p>ZozulaDrop</p>
+                            <p>Katowice</p>
+                            <p>Poland</p>
+                            <p>Phone: (+48) 000 000 000</p>
+                            <p>Email: mail@gmail.com</p>
                         </address>
                         <div className="social-networks">
-                            <h2 className="title text-center">Social Networking</h2>
+                            <h2 className="title text-center">Social Media</h2>
                             <ul>
                             <li>
                                 <a href="#"><i className="fa fa-facebook"></i></a>

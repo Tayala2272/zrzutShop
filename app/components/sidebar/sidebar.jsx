@@ -5,11 +5,16 @@ import Categories from '../sidebar/categories';
 import Slider from '@mui/material/Slider';
 import { Link } from "react-router-dom";
 
-export default function Sidebar(){
+export default function Sidebar({max}){
+    function roundUpTo10(liczba) {
+        return Math.ceil(liczba / 10) * 10;
+    }
+    const endMax = roundUpTo10(max)
+
     return (
         <div className="col-sm-3">
             <div className="left-sidebar">
-                <h2>Category</h2>
+                <h2>Kategorie</h2>
                 {/* Kategoria rozwijana */}
                     <Categories/>
 
@@ -25,20 +30,20 @@ export default function Sidebar(){
                 </div>
                 </div> */}
                 <div className="price-range">
-                    <h2>Price Range</h2>
+                    <h2>Zakres Ceny</h2>
                     <div className="well">
                     <Slider
                         aria-label="Temperature"
-                        defaultValue={600}
+                        defaultValue={endMax}
                         getAriaValueText={(val)=>{return val}}
                         valueLabelDisplay="auto"
                         shiftStep={30}
                         step={10}
                         min={0}
-                        max={600}
+                        max={endMax}
                     />
                     <br />
-                    <b>$ 0</b> <b className="pull-right">$ 600</b>
+                    <b>0 zł</b> <b className="pull-right">{endMax} zł</b>
                     </div>
                 </div>
                 <div className="shipping text-center">

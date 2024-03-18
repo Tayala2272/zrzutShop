@@ -5,7 +5,7 @@ export default function Error(){
         <>
             <div className="container text-center">
                 <div className="logo-404">
-                    <a href="index.html"><img src="images/home/logo.png" alt="" /></a>
+                    <a href="index.html"><img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/logo.png?alt=media&token=6fb96135-16db-4471-92e5-878ea1579aa0" alt="" /></a>
                 </div>
                 <div className="content-404" style={{marginBottom:"400px"}}>
                     {/* <img src="images/404/404.png" className="img-responsive" alt="" /> */}

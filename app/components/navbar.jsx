@@ -1,10 +1,10 @@
 
 import { Link } from "react-router-dom";
 
-import {UserAuth} from "../hooks/auth"
+import { AppContext } from "../hooks/firebaseContext";
 
 export default function Navbar(){
-    const { handleLogOut, user } = UserAuth()
+    const { handleLogOut, user, cart } = AppContext();
 
     let admin = false
     if(user){
@@ -49,20 +49,45 @@ export default function Navbar(){
                 <div className="row">
                 <div className="col-sm-4">
                     <div className="logo pull-left">
-                    <a href="index.html"><img src="./app/assets/home/logo.png" alt=""/></a>
+                    <a href="index.html"><img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/logo.png?alt=media&token=6fb96135-16db-4471-92e5-878ea1579aa0" alt=""/></a>
                     </div>
                 </div>
                 <div className="col-sm-8">
                     <div className="shop-menu pull-right">
                     <ul className="nav navbar-nav">
                     {user && <>
-                        <li><a href="#"><i className="fa fa-user"></i> Account</a></li>
-                        <li><a href="#"><i className="fa fa-star"></i> Wishlist</a></li>
-                        <li><a href="checkout.html"><i className="fa fa-crosshairs"></i> Checkout</a></li>
-                        <li><Link to="/cart"><i className="fa fa-shopping-cart"></i> Cart</Link></li>
-                        {admin && <li><Link to="/add-product">Dodaj produkt</Link></li>}
+                        <li style={{textAlign:"center"}}>
+                            <Link to="/account"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Faccount.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                            <br/>Account</Link>
+                        </li>
+                        {/* <li style={{textAlign:"center"}}>
+                            <Link to="/"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Faccount.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                            <br/>Wishlist</Link>
+                        </li> */}
+                        <li style={{textAlign:"center"}}>
+                            <Link to="/cart"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fcart.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                            <br/>Koszyk {cart && <sup>({cart.length})</sup>}</Link>
+                        </li>
+                        {/* Admin section */}
+                        {admin && 
+                            <li style={{textAlign:"center"}}>
+                                <Link to="/add-product"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fadd.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                                <br/>Dodaj produkt</Link>
+                            </li>}
                     </>}
-                        {user ? <li><a onClick={()=>handleLogOut()} style={{cursor:"pointer"}}><i className="fa fa-lock"></i> Log Out</a></li> : <li><Link to="/login"><i className="fa fa-lock"></i> Login</Link></li>}
+                        {/* Przycisk od logowania i wylogowywania */}
+                        {user ? 
+                            <li style={{textAlign:"center"}}>
+                                <a onClick={()=>handleLogOut()} style={{cursor:"pointer"}}>
+                                    <img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Flog-out.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                                    <br/>Wyloguj się
+                                </a>
+                            </li> 
+                            : 
+                            <li style={{textAlign:"center"}}>
+                                <Link to="/login"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Faccount.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                                <br/>Zaloguj się</Link>
+                            </li>}
                     </ul>
                     </div>
                 </div>
@@ -86,10 +111,10 @@ export default function Navbar(){
                     </div>
                     <div className="mainmenu pull-left">
                     <ul className="nav navbar-nav collapse navbar-collapse">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/shop">Shop</Link></li>
-                        <li><Link to="/about">About</Link></li>
-                        <li><Link to="/contact">Contact</Link></li>
+                        <li><Link to="/">Strona główna</Link></li>
+                        <li><Link to="/shop">Produkty</Link></li>
+                        <li><Link to="/about">O nas</Link></li>
+                        <li><Link to="/contact">Kontakt</Link></li>
                     </ul>
                     </div>
                 </div>

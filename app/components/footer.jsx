@@ -10,44 +10,41 @@ export default function Footer(){
                     <div className="row">
                         <div className="col-sm-2">
                         <div className="companyinfo">
-                            <h2><span>e</span>-shopper</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/logo.png?alt=media&token=6fb96135-16db-4471-92e5-878ea1579aa0" alt="logo"/>
                         </div>
                         </div>
                         <div className="col-sm-7"></div>
-                        <div className="col-sm-3">
+                        {/* <div className="col-sm-3">
                         <div className="address">
                             <img src="./app/assets/home/map.png" alt="" />
                             <p>505 S Atlantic Ave Virginia Beach, VA(Virginia)</p>
                         </div>
-                        </div>
+                        </div> */}
                     </div>
                     </div>
                 </div>
 
-                <div className="footer-widget">
+                <div className="footer-widget" style={{marginBottom:"0",paddingBottom:"100px"}}>
                     <div className="container">
                     <div className="row">
-                        {/* Tu są kolejne cztery bloki col-sm-2 */}
-                        <div className="col-sm-3 col-sm-offset-1">
+                        <div className="col-sm-4 col-sm-offset-2">
                         <div className="single-widget">
-                            <h2>About Shopper</h2>
+                            <h2>Zapisz się do newsletter</h2>
                             <form action="#" className="searchform">
-                            <input type="text" placeholder="Your email address" />
+                            <input type="text" placeholder="Twój adres email" />
                             <button type="submit" className="btn btn-default"><i className="fa fa-arrow-circle-o-right"></i></button>
-                            <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                            <p>Zapisz się do newslettera, a będzie dostawać <br/> wiadomości o najnowszych promocjach!</p>
                             </form>
                         </div>
                         </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div className="footer-bottom">
-                    <div className="container">
-                    <div className="row">
-                        <p className="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
-                        <p className="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+                        <div className="col-sm-4 col-sm-offset-1">
+                        <h2 className="title text-center">Kontakt</h2>
+                        <address className="text-center">
+                            <p>Katowice: Polska</p>
+                            <p>Phone: (+48) 000 000 000</p>
+                            <p>Email: mail@gmail.com</p>
+                        </address>
+                        </div>
                     </div>
                     </div>
                 </div>

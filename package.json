@@ -16,6 +16,7 @@
     "fancybox": "^3.0.1",
     "firebase": "^10.8.1",
     "i18next": "^23.10.0",
+    "jquery": "^3.7.1",
     "json-loader": "^0.5.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
