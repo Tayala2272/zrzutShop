@@ -77,8 +77,12 @@ export default function Produkty(){
                 <div className="col-sm-9 padding-right">
                     <div className="features_items">
                         <h2 className="title text-center">Produkty</h2>
-                        {loading ?<>Loading...</> : products.map(product=>
-                            <Produkt key={product.id} price={product.price} name={product.name} img={product.img} id={product.id}/>
+                        {loading ? (<>Loading...</>) : products.length > 0 ? (
+                        products.map((product) => (
+                            <Produkt key={product.id} price={product.price} name={product.name} img={product.img} id={product.id} />
+                        ))
+                        ) : (
+                        <>Nie znaleziono żadnych produktów</>
                         )}
                     </div>
                 </div>

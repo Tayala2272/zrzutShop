@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom/client'
 
 import { BrowserRouter,  Route, Routes } from 'react-router-dom';
 
-// Auth
-  import { AuthContextProvider } from '../app/hooks/auth';
-
-  import "../app/hooks/language"
+// Language
+  import "../app/lang/language.js"
 
 // Elements
   import Navbar from '../app/components/navbar';

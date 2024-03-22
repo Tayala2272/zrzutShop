@@ -24,6 +24,7 @@ export default function Product_detail(){
     const { productId } = useParams();
     const [ product, setProduct ] = useState()
     const [ amount, setAmount ] = useState(1)
+    const [ price, setPrice ] = useState(0)
 
     const [ thumbnailImg, setThumbnailImg ] = useState("")
     
@@ -41,6 +42,7 @@ export default function Product_detail(){
                     })).then(async (imageUrlArray)=>{
                         const tmp = docSnap.data()
                         setProduct(tmp)
+                        setPrice(tmp.price)
                         setImages(imageUrlArray)
                         await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
                             setThumbnailImg(tmp)
@@ -65,6 +67,11 @@ export default function Product_detail(){
         setImage(img)
     }
 
+    function handleSubmit(event){
+        event.preventDefault()
+        console.log('chuj')
+        AddToCart(productId,amount,user,price,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+    }
 
 
 
@@ -85,24 +92,32 @@ export default function Product_detail(){
 
                             {/* Controls */}
                             <a className="left item-control" href="#similar-product" data-slide="prev">
-                                <i className="fa fa-angle-left"></i>
+                                <img style={{width:'30px'}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fangle-left.svg?alt=media&token=d8b4437a-9d9f-4574-9e33-1c6bf75a0ab4" alt="arrow"/>
                             </a>
                             <a className="right item-control" href="#similar-product" data-slide="next">
-                                <i className="fa fa-angle-right"></i>
+                                <img style={{width:'30px'}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fangle-right.svg?alt=media&token=d8b4437a-9d9f-4574-9e33-1c6bf75a0ab4" alt="arrow"/>
                             </a>
                         </div>
 
                     </div>
                     <div className="col-sm-7">
-                        <div className="product-information">
+                        <form className="product-information" onSubmit={handleSubmit}>
                             <h2>{product && product.productName}</h2>
                             <p>Id produktu: {productId}</p>
                             <img src="images/product-details/rating.png" alt="" />
                             <span>
                                 <span>{product && product.price+"zł"}</span>
-                                <label>Quantity:</label>
-                                <input type="number" defaultValue="1" onChange={(num)=>setAmount(parseInt(num.target.value))}/>
-                                <button type="button" className="btn btn-fefault cart" onClick={()=>AddToCart(productId,amount,user,product.price,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))}>
+                                <div style={{marginBottom:'10px'}}>
+                                    <label style={{width:'100px'}}>Quantity:</label>
+                                    <input type="number" defaultValue="1" min={1} step={1} onChange={(num)=>setAmount(parseInt(num.target.value))}/>
+                                </div>
+
+                                <div style={{margin:'0 0 20px 0'}}>
+                                    <label style={{width:'100px'}}>Price:</label>
+                                    <input style={{width:'100px'}} type="number" step={0.01} value={price} min={product && product.price} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>
+                                </div>
+
+                                <button type="submit" className="btn btn-fefault cart">
                                     <i className="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </button>
@@ -111,7 +126,7 @@ export default function Product_detail(){
                             <p><b>Condition:</b> New</p>
                             <p><b>Brand:</b> {product && <>product.brand</>}</p>
                             <a href=""><img src="images/product-details/share.png" className="share img-responsive" alt="" /></a>
-                        </div>
+                        </form>
                     </div>
                 </div>
 

@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 
 import { AppContext } from "../hooks/firebaseContext";
 
+import { useTranslation } from "react-i18next";
+
 export default function Navbar(){
-    const { handleLogOut, user, cart } = AppContext();
+    const { handleLogOut, user, cart, changeLanguage } = AppContext();
+    const { t } = useTranslation()
 
     let admin = false
     if(user){
@@ -88,6 +91,11 @@ export default function Navbar(){
                                 <Link to="/login"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Faccount.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
                                 <br/>Zaloguj się</Link>
                             </li>}
+                            <li>
+                                <a style={{cursor:"pointer",margin:"0"}} onClick={()=>changeLanguage("pl")}>Polski</a>
+                                <a style={{cursor:"pointer",margin:"0"}} onClick={()=>changeLanguage("en")}>English</a>
+                                <a style={{cursor:"pointer",margin:"0"}} onClick={()=>changeLanguage("ua")}>українська</a>
+                            </li>
                     </ul>
                     </div>
                 </div>
@@ -111,7 +119,7 @@ export default function Navbar(){
                     </div>
                     <div className="mainmenu pull-left">
                     <ul className="nav navbar-nav collapse navbar-collapse">
-                        <li><Link to="/">Strona główna</Link></li>
+                        <li><Link to="/">{t('home page')}</Link></li>
                         <li><Link to="/shop">Produkty</Link></li>
                         <li><Link to="/about">O nas</Link></li>
                         <li><Link to="/contact">Kontakt</Link></li>
