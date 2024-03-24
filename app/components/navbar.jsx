@@ -6,15 +6,8 @@ import { AppContext } from "../hooks/firebaseContext";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar(){
-    const { handleLogOut, user, cart, changeLanguage } = AppContext();
+    const { handleLogOut, user, cart, changeLanguage, admin } = AppContext();
     const { t } = useTranslation()
-
-    let admin = false
-    if(user){
-        if(user.uid=="CUaWiLcro3Wl3OG80Wc277tXOuE3"){
-            admin = true
-        }
-    }
 
     return(
         <header id="header">

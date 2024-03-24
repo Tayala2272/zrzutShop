@@ -1,7 +1,9 @@
 
-import { collection, onSnapshot } from "firebase/firestore";
+// import { collection, onSnapshot } from "firebase/firestore";
 
-import { db } from "../../../firebase"
+// import { db } from "../../../firebase"
+
+import { AppContext } from "../../hooks/firebaseContext";
 
 function main(category){
     let html = ``
@@ -48,21 +50,24 @@ function main(category){
 export default function Categories(){
 
     // sessionStorage.removeItem('categories');
-    if(sessionStorage.getItem('categories')==null){
-        onSnapshot(collection(db, "categories"), (snapshot) => {
-            const tmp = {};
-            snapshot.forEach((doc) => {
-                if(typeof doc.data().array==='object'){
-                    tmp[doc.data().text] = {...doc.data().array};
-                }
-                else{
-                    tmp[doc.data().text] = doc.data().array;
-                }
-            });
-            sessionStorage.setItem('categories', JSON.stringify(tmp));
-          });
-    }
-    const category =  JSON.parse(sessionStorage.getItem('categories'))
+    // if(sessionStorage.getItem('categories')==null){
+    //     onSnapshot(collection(db, "categories"), (snapshot) => {
+    //         const tmp = {};
+    //         snapshot.forEach((doc) => {
+    //             if(typeof doc.data().array==='object'){
+    //                 tmp[doc.data().text] = {...doc.data().array};
+    //             }
+    //             else{
+    //                 tmp[doc.data().text] = doc.data().array;
+    //             }
+    //         });
+    //         sessionStorage.setItem('categories', JSON.stringify(tmp));
+    //       });
+    // }
+    // const category =  JSON.parse(sessionStorage.getItem('categories'))
+
+
+    const { category } = AppContext()
 
     
     // console.log(Object.values(data))

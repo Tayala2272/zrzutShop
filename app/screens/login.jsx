@@ -30,7 +30,7 @@ export default function Login(){
 
     // Jeśli jest zalogowany to przenosi na strone główną
         const navigate = useNavigate();
-        if (user !== null) {
+        if (user) {
             navigate('/')
         }
 

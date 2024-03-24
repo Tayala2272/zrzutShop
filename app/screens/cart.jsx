@@ -5,10 +5,13 @@ import CartProduct from "../components/cart/cartProduct";
 
 import { AppContext } from "../hooks/firebaseContext";
 
+import { useNavigate } from "react-router-dom";
+
 
 export default function Cart(){
 
-    const { cart } = AppContext()
+    const { cart, user } = AppContext()
+
 
     return(
         <>
@@ -36,8 +39,16 @@ export default function Cart(){
             </div>
             </section>
             
-            <h4 className="text-center">Aby kupić orodukt, poczekaj aż dodamy opcje płatności</h4>
+            {user && <>
+            
+                <form action={"http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/"+user.uid} method="POST">
+                    <button type="submit">Checkout</button>
+                </form>
 
+                <form action={"http://localhost:5001/zrzutshop/us-central1/app/create-product/"+user.uid} method="POST">
+                    <button type="submit">Dodaj</button>
+                </form>
+            </>}
 
             {/* <section id="do_action">
             <div className="container">

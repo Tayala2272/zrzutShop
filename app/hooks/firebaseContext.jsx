@@ -78,6 +78,19 @@
                         unsubscribe();
                     };
                 }, []);
+            // Admin
+                const [ admin, setAdmin ] = useState(false)
+                useEffect(() => {
+                    console.log('------------------', user)
+                    if(user){
+                        if(user.uid=="CUaWiLcro3Wl3OG80Wc277tXOuE3"){
+                            setAdmin(true)
+                        }
+                        else{
+                            setAdmin(false)
+                        }
+                    }
+                }, [user]);
 
 
 
@@ -91,6 +104,23 @@
                 }
             }
 
+        // Kategorie
+            const [ category, setCategory ] = useState(null)
+            if(sessionStorage.getItem('categories')==null){
+                onSnapshot(collection(db, "categories"), (snapshot) => {
+                    const tmp = {};
+                    snapshot.forEach((doc) => {
+                        if(typeof doc.data().array==='object'){
+                            tmp[doc.data().text] = {...doc.data().array};
+                        }
+                        else{
+                            tmp[doc.data().text] = doc.data().array;
+                        }
+                    });
+                    sessionStorage.setItem('categories', JSON.stringify(tmp));
+                });
+            }
+            setCategory(JSON.parse(sessionStorage.getItem('categories')))
             
 
         // Koszyk
@@ -117,7 +147,7 @@
 
 
         return (
-            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang }}>
+            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category }}>
                 {children}
             </context.Provider>
         );
