@@ -13,6 +13,8 @@
     "@babel/runtime": "^7.24.0",
     "@fancyapps/ui": "^5.0.33",
     "@mui/material": "^5.15.11",
+    "@stripe/react-stripe-js": "^2.6.2",
+    "@stripe/stripe-js": "^3.1.0",
     "fancybox": "^3.0.1",
     "firebase": "^10.8.1",
     "i18next": "^23.10.0",
@@ -24,6 +26,7 @@
     "react-google-button": "^0.7.2",
     "react-i18next": "^14.0.5",
     "react-router-dom": "^6.22.2",
+    "stripe": "^14.22.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

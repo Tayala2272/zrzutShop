@@ -19,6 +19,9 @@
     import i18n from "i18next";
     import i18next from 'i18next';
 
+// Stripe
+    import Stripe from 'stripe';
+
 // context
     const context = createContext();
 
@@ -81,7 +84,6 @@
             // Admin
                 const [ admin, setAdmin ] = useState(false)
                 useEffect(() => {
-                    console.log('------------------', user)
                     if(user){
                         if(user.uid=="CUaWiLcro3Wl3OG80Wc277tXOuE3"){
                             setAdmin(true)
@@ -103,24 +105,51 @@
                     localStorage.setItem('lang', lg)
                 }
             }
+        // Stripe
+            const stripe = new Stripe('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
 
         // Kategorie
             const [ category, setCategory ] = useState(null)
-            if(sessionStorage.getItem('categories')==null){
-                onSnapshot(collection(db, "categories"), (snapshot) => {
-                    const tmp = {};
-                    snapshot.forEach((doc) => {
-                        if(typeof doc.data().array==='object'){
-                            tmp[doc.data().text] = {...doc.data().array};
-                        }
-                        else{
-                            tmp[doc.data().text] = doc.data().array;
-                        }
-                    });
-                    sessionStorage.setItem('categories', JSON.stringify(tmp));
-                });
-            }
-            setCategory(JSON.parse(sessionStorage.getItem('categories')))
+            useEffect(() => {
+                async function kategorie(){
+                    if(sessionStorage.getItem('categories')==null){
+                        const categories = await getDocs(collection(db, "categories"));
+                        const tmp = {};
+                        categories.forEach((doc) => {
+                            if(typeof doc.data().array==='object'){
+                                tmp[doc.data().text] = {...doc.data().array};
+                            }
+                            else{
+                                tmp[doc.data().text] = doc.data().array;
+                            }
+                        });
+                        sessionStorage.setItem('categories', JSON.stringify(tmp));
+                    }
+    
+                }
+                kategorie().then(()=>{
+                    setCategory(JSON.parse(sessionStorage.getItem('categories')))
+                }).catch(err=>alert(err))
+            }, []);
+            // async function kategorie(){
+            //     if(sessionStorage.getItem('categories')==null){
+            //         const categories = await getDocs(collection(db, "categories"));
+            //         const tmp = {};
+            //         categories.forEach((doc) => {
+            //             if(typeof doc.data().array==='object'){
+            //                 tmp[doc.data().text] = {...doc.data().array};
+            //             }
+            //             else{
+            //                 tmp[doc.data().text] = doc.data().array;
+            //             }
+            //         });
+            //         sessionStorage.setItem('categories', JSON.stringify(tmp));
+            //     }
+
+            // }
+            // kategorie().then(()=>{
+            //     setCategory(JSON.parse(sessionStorage.getItem('categories')))
+            // }).catch(err=>alert(err))
             
 
         // Koszyk
@@ -147,7 +176,7 @@
 
 
         return (
-            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category }}>
+            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category, stripe }}>
                 {children}
             </context.Provider>
         );

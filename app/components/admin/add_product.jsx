@@ -2,7 +2,6 @@
 import { useState } from "react";
 
 import { AppContext } from "../../hooks/firebaseContext";
-import { useNavigate } from "react-router-dom";
 
 import { db, firebase } from "../../../firebase"
 import { addDoc, collection } from "firebase/firestore";
@@ -14,17 +13,10 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
 
-
+import Error from "../../screens/error";
 
 
 export default function Add_product(){
-    //Sprawdzenie, czy konto należy do admina
-        const { user, admin } = AppContext()
-        const navigate = useNavigate();
-        if(!admin) {
-            navigate('/')
-        }
-
     // Dane:
         const [productName, setProductName] = useState('');
         const [opis, setOpis] = useState('');
@@ -36,6 +28,19 @@ export default function Add_product(){
         const [thumbnailImage, setThumbnailImage] = useState('');
         const [otherImages, setOtherImages] = useState([]);
         const [details, setDetails] = useState([{ title: '', content: '' }]);
+        
+    // Język
+        const { t } = useTranslation();
+
+    //Sprawdzenie, czy konto należy do admina
+        const { admin, stripe } = AppContext()
+        if(!admin) {
+            return(
+                <Error/>
+            )
+        }
+
+
     
         const isJpgOrPng = (fileName) => {
             return fileName.endsWith('.jpg') || fileName.endsWith('.png');
@@ -76,7 +81,6 @@ export default function Add_product(){
                             })
                         // Dodawanie produktu do stripe
                             const nazwa = productName;
-                            const opis = opis;
                             const cena_pln = cenaPln*100; // W groszach
                             const cena_usd = cenaUsd*100; // W centach
                             const cena_uah = cenaUah*100; // W kopiejkach
@@ -94,43 +98,50 @@ export default function Add_product(){
                                 const wariantPln = await stripe.prices.create({
                                     product: product.id,
                                     currency: 'pln',
-                                    unit_amount: cena_pln,
+                                    unit_amount: Math.round(cena_pln),
                                     tax_behavior: 'inclusive',
                                 });
                             
                                 const wariantUsd = await stripe.prices.create({
                                     product: product.id,
                                     currency: 'usd',
-                                    unit_amount: cena_usd,
+                                    unit_amount: Math.round(cena_usd),
                                     tax_behavior: 'inclusive',
                                 });
                             
                                 const wariantUah = await stripe.prices.create({
                                     product: product.id,
                                     currency: 'uah',
-                                    unit_amount: cena_uah,
+                                    unit_amount: Math.round(cena_uah),
                                     tax_behavior: 'inclusive',
                                 });
+                                
+                            // Dodawanie do bazy danych nowego produktu
+                                await addDoc(collection(db, "products"), {
+                                    "productName":productName,
+                                    "stripeID":stripeID,
+                                    "price_PLN":cenaPln,
+                                    "price_USD":cenaUsd,
+                                    "price_UAH":cenaUah,
+                                    "price_PLN_ID":wariantPln.id,
+                                    "price_USD_ID":wariantUsd.id,
+                                    "price_UAH_ID":wariantUah.id,
+                                    "brand":brand,
+                                    "category":category,
+                                    "thumbnailImage":newThumbnailImage,
+                                    "otherImages":newOtherImages,
+                                    "details":details
+                                }).then((snapshot)=>{
+                                    const key = snapshot.id;
+                                    // navigate('/product/'+key)
+                                    console.log(`Nowy produkt został dodany z kluczem: ${key}`);
+                                }).catch((error)=>{
+                                    console.log(error)
+                                })
+
                             } catch (error) {
                                 console.log(error);
                             }
-                        // Dodawanie do bazy danych nowego produktu
-                            await addDoc(collection(db, "products"), {
-                                "productName":productName,
-                                "stripeID":stripeID,
-                                "price":price,
-                                "brand":brand,
-                                "category":category,
-                                "thumbnailImage":newThumbnailImage,
-                                "otherImages":newOtherImages,
-                                "details":details
-                            }).then((snapshot)=>{
-                                const key = snapshot.id;
-                                navigate('/product/'+key)
-                                console.log(`Nowy produkt został dodany z kluczem: ${key}`);
-                            }).catch((error)=>{
-                                console.log(error)
-                            })
                     }else{
                         console.log("Thumbnail have not valid extension")
                     }
@@ -155,30 +166,29 @@ export default function Add_product(){
         };
 
 
-        const { t } = useTranslation();
     return (
         <>
             {admin && <>
                 <div className="container" style={{textAlign:"center"}}>
                     <h2>Dodawanie nowego produktu:</h2>
                     <form onSubmit={handleSubmit}>
-                        <label>Nazwa produktu:{t('test')}<br/><input type="text" placeholder="Telewizor" value={productName} onChange={(e) => setProductName(e.target.value)} required/></label><br/><br/>
-                        <label for="opis">Opis produktu:</label>
+                        <label>Nazwa produktu:<br/><input type="text" placeholder="Telewizor" value={productName} onChange={(e) => setProductName(e.target.value)} required/></label><br/><br/>
+                        <label htmlFor="opis">Opis produktu:</label>
                         <textarea id="opis" name="opis" value={opis} onChange={(e) => setOpis(e.target.value)} required />
                         <br/><br/>
-                        <label for="cena_pln">Cena (PLN): </label>
+                        <label htmlFor="cena_pln">Cena (PLN): </label>
                         <input type="number" id="cena_pln" min={0} step={0.01} placeholder="00.00" name="cena_pln" value={cenaPln} onChange={(e) => setCenaPln(e.target.value)} required />
                         <br/><br/>
-                        <label for="cena_usd">Cena (USD): </label>
+                        <label htmlFor="cena_usd">Cena (USD): </label>
                         <input type="number" id="cena_usd" min={0} step={0.01} placeholder="00.00" name="cena_usd" value={cenaUsd} onChange={(e) => setCenaUsd(e.target.value)} required />
                         <br/><br/>
-                        <label for="cena_uah">Cena (UAH): </label>
+                        <label htmlFor="cena_uah">Cena (UAH): </label>
                         <input type="number" id="cena_uah" min={0} step={0.01} placeholder="00.00" name="cena_uah" value={cenaUah} onChange={(e) => setCenaUah(e.target.value)} required />
                         <br/><br/>
                         <label>Marka:<br/><input type="text" value={brand} placeholder="Samsung" onChange={(e) => setBrand(e.target.value)} required/></label><br/><br/>
                         <label>Kategoria: 
                         <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-                            <option value="" disabled selected>Wybierz kategorie</option>
+                            <option value="" disabled defaultValue={true}>Wybierz kategorie</option>
                             <option value="Electronics">Electronics</option>
                             <option value="Clothing">Clothing</option>
                             <option value="Books">Books</option>

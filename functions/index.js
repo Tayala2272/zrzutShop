@@ -1,14 +1,14 @@
 
 
-
 // This is your test secret API key.
-const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
 const express = require('express');
 
 const app = express();
 app.use(express.static('public'));
 
-const YOUR_DOMAIN = 'http://localhost:4242';
+/*
+
+const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
 
 app.post('/create-checkout-session/:uid', async (req, res) => {
   const uid = req.params.uid
@@ -101,7 +101,7 @@ app.post('/create-checkout-session/:uid', async (req, res) => {
 app.post('/create-product/:uid', async (req, res) => {
     const uid = req.params.uid
     if(uid != 'CUaWiLcro3Wl3OG80Wc277tXOuE3'){
-      req.send('Brak uprawnień')
+      res.send('Brak uprawnień')
       return
     }
 
@@ -146,25 +146,13 @@ app.post('/create-product/:uid', async (req, res) => {
     }
 })
 
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+
+*/
+
 
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
 
 
 exports.app = onRequest(app);

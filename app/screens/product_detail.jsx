@@ -17,16 +17,20 @@ import AddToCart from "../components/cart/addToCart";
 
 
 export default function Product_detail(){
-    const { user } = AppContext()
+    const { user, lang } = AppContext()
 
 
     const [ images, setImages] = useState([]);
-    const { productId } = useParams();
     const [ product, setProduct ] = useState()
     const [ amount, setAmount ] = useState(1)
-    const [ price, setPrice ] = useState(0)
+    const [ pricePLN, setPricePLN ] = useState(0)
+    const [ priceUSD, setPriceUSD ] = useState(0)
+    const [ priceUAH, setPriceUAH ] = useState(0)
+
+    const [ loading, setLoading ] =useState(true)
 
     const [ thumbnailImg, setThumbnailImg ] = useState("")
+    const { productId } = useParams();
     
     const navigate = useNavigate();
     useEffect(() => {
@@ -42,12 +46,16 @@ export default function Product_detail(){
                     })).then(async (imageUrlArray)=>{
                         const tmp = docSnap.data()
                         setProduct(tmp)
-                        setPrice(tmp.price)
+                        setPricePLN(tmp.price_PLN)
+                        setPriceUSD(tmp.price_USD)
+                        setPriceUAH(tmp.price_UAH)
                         setImages(imageUrlArray)
                         await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
+                            console.log("Thumbnail Image URL:", tmp);
                             setThumbnailImg(tmp)
                             setImages([tmp, ...imageUrlArray])
                             setImage(tmp)
+                            setLoading(false)
                         })
                     });
                 } else {
@@ -69,7 +77,6 @@ export default function Product_detail(){
 
     function handleSubmit(event){
         event.preventDefault()
-        console.log('chuj')
         AddToCart(productId,amount,user,price,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
     }
 
@@ -101,12 +108,12 @@ export default function Product_detail(){
 
                     </div>
                     <div className="col-sm-7">
-                        <form className="product-information" onSubmit={handleSubmit}>
+                        <form className="product-information" onSubmit={()=>handleSubmit}>
                             <h2>{product && product.productName}</h2>
-                            <p>Id produktu: {productId}</p>
+                            <p>Id produktu: {loading==false && productId}</p>
                             <img src="images/product-details/rating.png" alt="" />
                             <span>
-                                <span>{product && product.price+"zł"}</span>
+                                <span>{loading==false && lang=="pl" && pricePLN+"zł"}{loading==false && lang=="en" && priceUSD+"$"}{loading==false && lang=="ua" && priceUAH+"₴"}</span>
                                 <div style={{marginBottom:'10px'}}>
                                     <label style={{width:'100px'}}>Quantity:</label>
                                     <input type="number" defaultValue="1" min={1} step={1} onChange={(num)=>setAmount(parseInt(num.target.value))}/>
@@ -114,7 +121,10 @@ export default function Product_detail(){
 
                                 <div style={{margin:'0 0 20px 0'}}>
                                     <label style={{width:'100px'}}>Price:</label>
-                                    <input style={{width:'100px'}} type="number" step={0.01} value={price} min={product && product.price} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>
+                                    {lang && lang=="pl" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && pricePLN} min={pricePLN} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>}
+                                    {lang && lang=="en" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && priceUSD} min={priceUSD} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>}
+                                    {lang && lang=="ua" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && priceUAH} min={priceUAH} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>}
+                                    
                                 </div>
 
                                 <button type="submit" className="btn btn-fefault cart">
