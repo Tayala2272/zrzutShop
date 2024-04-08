@@ -1,14 +1,30 @@
 
-
+/*
 // This is your test secret API key.
 const express = require('express');
 
 const app = express();
 app.use(express.static('public'));
 
-/*
 
 const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
+
+
+// app.post('/create-product/:uid/:pid', async (req, res) => {
+//   const uid = req.params.uid
+//   const pid = req.params.pid
+
+//   try {
+//     if(uid && pid){
+
+//         res.send('good')
+//     }else{
+//         res.send('not good')
+//     }
+//   } catch (error) {
+//       res.send(error);
+//   }
+// })
 
 app.post('/create-checkout-session/:uid', async (req, res) => {
   const uid = req.params.uid
@@ -119,24 +135,11 @@ app.post('/create-product/:uid', async (req, res) => {
         });
     
         // Tworzenie wariantów ceny dla różnych walut
-        const wariantPln = await stripe.prices.create({
-            product: product.id,
-            currency: 'pln',
-            unit_amount: cena_pln,
-            tax_behavior: 'inclusive',
-        });
     
         const wariantUsd = await stripe.prices.create({
             product: product.id,
             currency: 'usd',
             unit_amount: cena_usd,
-            tax_behavior: 'inclusive',
-        });
-    
-        const wariantUah = await stripe.prices.create({
-            product: product.id,
-            currency: 'uah',
-            unit_amount: cena_uah,
             tax_behavior: 'inclusive',
         });
     
@@ -147,8 +150,6 @@ app.post('/create-product/:uid', async (req, res) => {
 })
 
 
-*/
-
 
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
@@ -156,3 +157,5 @@ const logger = require("firebase-functions/logger");
 
 
 exports.app = onRequest(app);
+
+*/

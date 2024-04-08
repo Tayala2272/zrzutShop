@@ -5,6 +5,13 @@ import { AppContext } from "../hooks/firebaseContext";
 
 import { useTranslation } from "react-i18next";
 
+// Images
+    import logo from "../assets/logo.png"
+    import account from "../assets/svg/account.svg"
+    import cart_svg from "../assets/svg/cart.svg"
+    import logout from "../assets/svg/log-out.svg"
+    import add_svg from "../assets/svg/add.svg"
+
 export default function Navbar(){
     const { handleLogOut, user, cart, changeLanguage, admin } = AppContext();
     const { t } = useTranslation()
@@ -45,7 +52,7 @@ export default function Navbar(){
                 <div className="row">
                 <div className="col-sm-4">
                     <div className="logo pull-left">
-                    <a href="index.html"><img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/logo.png?alt=media&token=6fb96135-16db-4471-92e5-878ea1579aa0" alt=""/></a>
+                    <a href="index.html"><img src={logo} alt=""/></a>
                     </div>
                 </div>
                 <div className="col-sm-8">
@@ -53,7 +60,7 @@ export default function Navbar(){
                     <ul className="nav navbar-nav">
                     {user && <>
                         <li style={{textAlign:"center"}}>
-                            <Link to="/account"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Faccount.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                            <Link to="/account"><img style={{width:"22px"}} src={account} alt="icon"/>
                             <br/>Account</Link>
                         </li>
                         {/* <li style={{textAlign:"center"}}>
@@ -61,13 +68,13 @@ export default function Navbar(){
                             <br/>Wishlist</Link>
                         </li> */}
                         <li style={{textAlign:"center"}}>
-                            <Link to="/cart"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fcart.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                            <Link to="/cart"><img style={{width:"22px"}} src={cart_svg} alt="icon"/>
                             <br/>Koszyk {cart && <sup>({cart.length})</sup>}</Link>
                         </li>
                         {/* Admin section */}
                         {admin && 
                             <li style={{textAlign:"center"}}>
-                                <Link to="/add-product"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fadd.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                                <Link to="/add-product"><img style={{width:"22px"}} src={add_svg} alt="icon"/>
                                 <br/>Dodaj produkt</Link>
                             </li>}
                     </>}
@@ -75,13 +82,13 @@ export default function Navbar(){
                         {user ? 
                             <li style={{textAlign:"center"}}>
                                 <a onClick={()=>handleLogOut()} style={{cursor:"pointer"}}>
-                                    <img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Flog-out.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                                    <img style={{width:"22px"}} src={logout} alt="icon"/>
                                     <br/>Wyloguj się
                                 </a>
                             </li> 
                             : 
                             <li style={{textAlign:"center"}}>
-                                <Link to="/login"><img style={{width:"22px"}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Faccount.svg?alt=media&token=de705bbb-9ea6-4df0-93bc-7986efda7231" alt="icon"/>
+                                <Link to="/login"><img style={{width:"22px"}} src={account} alt="icon"/>
                                 <br/>Zaloguj się</Link>
                             </li>}
                             <li>

@@ -1,4 +1,5 @@
 
+import React, {useState,useEffect} from "react";
 
 import CartProduct from "../components/cart/cartProduct";
 
@@ -9,8 +10,54 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Cart(){
+    
+    const [ message, setMessage ] = useState("");
 
     const { cart, user } = AppContext()
+
+    
+    useEffect(() => {
+        const query = new URLSearchParams(window.location.search);
+        if (query.get("success")) {
+            alert("Order placed! You will receive an email confirmation.");
+        }
+        if (query.get("canceled")) {
+            alert("Order canceled -- continue to shop around and checkout when you're ready.");
+        }
+    }, []);
+
+      
+    async function handleSubmit(event){
+        event.preventDefault()
+        if(user && cart){
+            const array = cart.map(x=>{return {"stripeId":x.stripeId,"price":x.price}})
+            console.log(array)
+            // try {
+            //     const stripe = await stripePromise;
+            //     const response = await fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+user.uid, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({
+            //             productId,
+            //             customPrice,
+            //         }),
+            //     });
+            //     const session = await response.json();
+            //     await stripe.redirectToCheckout({
+            //         sessionId: session.id,
+            //     });
+            // } catch (error) {
+            //     setError('Wystąpił błąd podczas tworzenia sesji płatności.');
+            //     console.error(error);
+            // } finally {
+            //     setIsCheckoutLoading(false);
+            // }
+        }else{
+            alert("Musisz się zalogować")
+        }
+    }
 
 
     return(
@@ -41,13 +88,13 @@ export default function Cart(){
             
             {user && <>
             
-                <form action={"http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/"+user.uid} method="POST">
+                <form onSubmit={handleSubmit}>
                     <button type="submit">Checkout</button>
                 </form>
 
-                <form action={"http://localhost:5001/zrzutshop/us-central1/app/create-product/"+user.uid} method="POST">
+                {/* <form action={"http://localhost:5001/zrzutshop/us-central1/app/create-product/"+user.uid} method="POST">
                     <button type="submit">Dodaj</button>
-                </form>
+                </form> */}
             </>}
 
             {/* <section id="do_action">

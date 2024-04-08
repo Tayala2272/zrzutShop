@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next";
 
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
+import { useNavigate } from "react-router-dom";
+
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -20,9 +22,9 @@ export default function Add_product(){
     // Dane:
         const [productName, setProductName] = useState('');
         const [opis, setOpis] = useState('');
-        const [cenaPln, setCenaPln] = useState('');
+        // const [cenaPln, setCenaPln] = useState('');
         const [cenaUsd, setCenaUsd] = useState('');
-        const [cenaUah, setCenaUah] = useState('');
+        // const [cenaUah, setCenaUah] = useState('');
         const [brand, setBrand] = useState('');
         const [category, setCategory] = useState('');
         const [thumbnailImage, setThumbnailImage] = useState('');
@@ -31,6 +33,8 @@ export default function Add_product(){
         
     // Język
         const { t } = useTranslation();
+        const navigate = useNavigate();
+
 
     //Sprawdzenie, czy konto należy do admina
         const { admin, stripe } = AppContext()
@@ -81,9 +85,9 @@ export default function Add_product(){
                             })
                         // Dodawanie produktu do stripe
                             const nazwa = productName;
-                            const cena_pln = cenaPln*100; // W groszach
-                            const cena_usd = cenaUsd*100; // W centach
-                            const cena_uah = cenaUah*100; // W kopiejkach
+                            // const cena_pln = cenaPln*100;
+                            const cena_usd = cenaUsd*100;
+                            // const cena_uah = cenaUah*100;
                             let stripeID = ''
 
                             try {
@@ -95,12 +99,12 @@ export default function Add_product(){
                                 stripeID = product.id
                             
                                 // Tworzenie wariantów ceny dla różnych walut
-                                const wariantPln = await stripe.prices.create({
-                                    product: product.id,
-                                    currency: 'pln',
-                                    unit_amount: Math.round(cena_pln),
-                                    tax_behavior: 'inclusive',
-                                });
+                                // const wariantPln = await stripe.prices.create({
+                                //     product: product.id,
+                                //     currency: 'pln',
+                                //     unit_amount: Math.round(cena_pln),
+                                //     tax_behavior: 'inclusive',
+                                // });
                             
                                 const wariantUsd = await stripe.prices.create({
                                     product: product.id,
@@ -109,23 +113,19 @@ export default function Add_product(){
                                     tax_behavior: 'inclusive',
                                 });
                             
-                                const wariantUah = await stripe.prices.create({
-                                    product: product.id,
-                                    currency: 'uah',
-                                    unit_amount: Math.round(cena_uah),
-                                    tax_behavior: 'inclusive',
-                                });
+                                // const wariantUah = await stripe.prices.create({
+                                //     product: product.id,
+                                //     currency: 'uah',
+                                //     unit_amount: Math.round(cena_uah),
+                                //     tax_behavior: 'inclusive',
+                                // });
                                 
                             // Dodawanie do bazy danych nowego produktu
                                 await addDoc(collection(db, "products"), {
                                     "productName":productName,
                                     "stripeID":stripeID,
-                                    "price_PLN":cenaPln,
                                     "price_USD":cenaUsd,
-                                    "price_UAH":cenaUah,
-                                    "price_PLN_ID":wariantPln.id,
                                     "price_USD_ID":wariantUsd.id,
-                                    "price_UAH_ID":wariantUah.id,
                                     "brand":brand,
                                     "category":category,
                                     "thumbnailImage":newThumbnailImage,
@@ -133,8 +133,8 @@ export default function Add_product(){
                                     "details":details
                                 }).then((snapshot)=>{
                                     const key = snapshot.id;
-                                    // navigate('/product/'+key)
-                                    console.log(`Nowy produkt został dodany z kluczem: ${key}`);
+                                    navigate('/product/'+key)
+                                    alert(`Nowy produkt został dodany z kluczem: ${key}`);
                                 }).catch((error)=>{
                                     console.log(error)
                                 })
@@ -176,15 +176,15 @@ export default function Add_product(){
                         <label htmlFor="opis">Opis produktu:</label>
                         <textarea id="opis" name="opis" value={opis} onChange={(e) => setOpis(e.target.value)} required />
                         <br/><br/>
-                        <label htmlFor="cena_pln">Cena (PLN): </label>
+                        {/* <label htmlFor="cena_pln">Cena (PLN): </label>
                         <input type="number" id="cena_pln" min={0} step={0.01} placeholder="00.00" name="cena_pln" value={cenaPln} onChange={(e) => setCenaPln(e.target.value)} required />
-                        <br/><br/>
+                        <br/><br/> */}
                         <label htmlFor="cena_usd">Cena (USD): </label>
                         <input type="number" id="cena_usd" min={0} step={0.01} placeholder="00.00" name="cena_usd" value={cenaUsd} onChange={(e) => setCenaUsd(e.target.value)} required />
                         <br/><br/>
-                        <label htmlFor="cena_uah">Cena (UAH): </label>
+                        {/* <label htmlFor="cena_uah">Cena (UAH): </label>
                         <input type="number" id="cena_uah" min={0} step={0.01} placeholder="00.00" name="cena_uah" value={cenaUah} onChange={(e) => setCenaUah(e.target.value)} required />
-                        <br/><br/>
+                        <br/><br/> */}
                         <label>Marka:<br/><input type="text" value={brand} placeholder="Samsung" onChange={(e) => setBrand(e.target.value)} required/></label><br/><br/>
                         <label>Kategoria: 
                         <select value={category} onChange={(e) => setCategory(e.target.value)} required>

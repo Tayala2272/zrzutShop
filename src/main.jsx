@@ -34,12 +34,12 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
   import '../app/assets/js/main.js';
 
 // CSS
-  import '../app/assets/css/bootstrap.min.css'; // Zaimportuj plik CSS
-  import '../app/assets/css/prettyPhoto.css'; // Zaimportuj plik CSS
-  import '../app/assets/css/price-range.css'; // Zaimportuj plik CSS
-  import '../app/assets/css/animate.css'; // Zaimportuj plik CSS
-  import '../app/assets/css/main.css'; // Zaimportuj plik CSS
-  import '../app/assets/css/responsive.css'; // Zaimportuj plik CSS
+  import '../app/assets/css/bootstrap.min.css';
+  import '../app/assets/css/prettyPhoto.css';
+  import '../app/assets/css/price-range.css';
+  import '../app/assets/css/animate.css';
+  import '../app/assets/css/main.css';
+  import '../app/assets/css/responsive.css';
 
 
 // Firebase

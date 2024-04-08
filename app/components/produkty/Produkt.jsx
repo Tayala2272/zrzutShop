@@ -21,7 +21,7 @@ export default function Produkt({ price, name, img, id }){
                     <div className="single-products">
                     <div className="productinfo text-center">
                         <img src={image} alt="" />
-                        <h2 style={{color:"black"}}>{price}zł</h2>
+                        <h2 style={{color:"black"}}>{price}$</h2>
                         <p>{name}</p>
                         {/* <a href="" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart"></i>Add to cart</a> */}
                     </div>

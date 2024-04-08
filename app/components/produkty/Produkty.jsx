@@ -28,7 +28,7 @@ export default function Produkty(){
                         const products = [];
                   
                         querySnapshot.forEach((doc) => {
-                            const price = doc.data().price;
+                            const price = doc.data().price_USD;
                             const name = doc.data().productName;
                             const img = doc.data().thumbnailImage;
                             const id = doc.id;
@@ -44,7 +44,7 @@ export default function Produkty(){
                 } else{
                     await getDocs(collRef).then((res)=>{
                         res.forEach((doc)=>{
-                            const price = doc.data().price
+                            const price = doc.data().price_USD
                             const name = doc.data().productName
                             const img = doc.data().thumbnailImage
                             const id = doc.id

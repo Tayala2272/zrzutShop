@@ -30,6 +30,17 @@
     export function AppContextProvider({ children }){
         const navigate = useNavigate();
 
+        // Przewalutowanie
+            const [exchangeRates, setExchangeRates] = useState(null);
+            useEffect(() => {
+                fetch('https://api.exchangerate-api.com/v4/latest/USD')
+                .then(response => response.json())
+                .then(data => {
+                    setExchangeRates(data.rates);
+                })
+                .catch(error => console.error('Error fetching exchange rates:', error));
+            }, []);
+
         // Auth
             const [user, setUser] = useState({});
 
@@ -106,7 +117,7 @@
                 }
             }
         // Stripe
-            const stripe = new Stripe('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
+            const stripe = 'sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx'
 
         // Kategorie
             const [ category, setCategory ] = useState(null)
@@ -176,7 +187,7 @@
 
 
         return (
-            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category, stripe }}>
+            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category, stripe, exchangeRates }}>
                 {children}
             </context.Provider>
         );

@@ -17,17 +17,22 @@ import AddToCart from "../components/cart/addToCart";
 
 
 export default function Product_detail(){
-    const { user, lang } = AppContext()
+    const { user, lang, exchangeRates } = AppContext()
 
 
     const [ images, setImages] = useState([]);
     const [ product, setProduct ] = useState()
     const [ amount, setAmount ] = useState(1)
+    const [ stripeId, setStripeId ] = useState('')
+
+    const [ SolidpricePLN, setSolidPricePLN ] = useState(0)
+    const [ SolidpriceUSD, setSolidPriceUSD ] = useState(0)
+    const [ SolidpriceUAH, setSolidPriceUAH ] = useState(0)
     const [ pricePLN, setPricePLN ] = useState(0)
     const [ priceUSD, setPriceUSD ] = useState(0)
     const [ priceUAH, setPriceUAH ] = useState(0)
 
-    const [ loading, setLoading ] =useState(true)
+    const [ loading, setLoading ] = useState(true)
 
     const [ thumbnailImg, setThumbnailImg ] = useState("")
     const { productId } = useParams();
@@ -35,38 +40,43 @@ export default function Product_detail(){
     const navigate = useNavigate();
     useEffect(() => {
         async function downloadProduct() {
-            try {
-                const docRef = doc(db, "products", productId);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const imageNames = docSnap.data().otherImages;
-                    await Promise.all(imageNames.map(async (imageName) => {
-                        const imageUrl = await getDownloadURL(ref(storage, `products/${imageName}`));
-                        return imageUrl;
-                    })).then(async (imageUrlArray)=>{
-                        const tmp = docSnap.data()
-                        setProduct(tmp)
-                        setPricePLN(tmp.price_PLN)
-                        setPriceUSD(tmp.price_USD)
-                        setPriceUAH(tmp.price_UAH)
-                        setImages(imageUrlArray)
-                        await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
-                            console.log("Thumbnail Image URL:", tmp);
-                            setThumbnailImg(tmp)
-                            setImages([tmp, ...imageUrlArray])
-                            setImage(tmp)
-                            setLoading(false)
-                        })
-                    });
-                } else {
-                    navigate('/error/'+productId)
+            if(exchangeRates && productId){
+                try {
+                    const docRef = doc(db, "products", productId);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const imageNames = docSnap.data().otherImages;
+                        await Promise.all(imageNames.map(async (imageName) => {
+                            const imageUrl = await getDownloadURL(ref(storage, `products/${imageName}`));
+                            return imageUrl;
+                        })).then(async (imageUrlArray)=>{
+                            const tmp = docSnap.data()
+                            setProduct(tmp)
+                            setPriceUSD(tmp.price_USD)
+                            setPricePLN((tmp.price_USD * exchangeRates.PLN).toFixed(2))
+                            setPriceUAH((tmp.price_USD * exchangeRates.UAH).toFixed(2))
+                            setSolidPriceUSD(tmp.price_USD)
+                            setSolidPricePLN((tmp.price_USD * exchangeRates.PLN).toFixed(2))
+                            setSolidPriceUAH((tmp.price_USD * exchangeRates.UAH).toFixed(2))
+                            setImages(imageUrlArray)
+                            setStripeId(tmp.stripeID)
+                            await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
+                                setThumbnailImg(tmp)
+                                setImages([tmp, ...imageUrlArray])
+                                setImage(tmp)
+                                setLoading(false)
+                            })
+                        });
+                    } else {
+                        navigate('/error/'+productId)
+                    }
+                } catch (error) {
+                    console.error("Error downloading images:", error);
                 }
-            } catch (error) {
-                console.error("Error downloading images:", error);
             }
         }
         downloadProduct();
-    }, [productId]);
+    }, [exchangeRates]);
 
     const [image, setImage] = useState("")
 
@@ -77,7 +87,15 @@ export default function Product_detail(){
 
     function handleSubmit(event){
         event.preventDefault()
-        AddToCart(productId,amount,user,price,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+        if(lang=="pl"){
+            AddToCart(productId,stripeId,amount,user,pricePLN/exchangeRates.PLN,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+        }
+        if(lang=="en"){
+            AddToCart(productId,stripeId,amount,user,priceUSD,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+        }
+        if(lang=="ua"){
+            AddToCart(productId,stripeId,amount,user,pricePLN/exchangeRates.UAH,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+        }
     }
 
 
@@ -108,12 +126,12 @@ export default function Product_detail(){
 
                     </div>
                     <div className="col-sm-7">
-                        <form className="product-information" onSubmit={()=>handleSubmit}>
+                        <form className="product-information" onSubmit={handleSubmit}>
                             <h2>{product && product.productName}</h2>
                             <p>Id produktu: {loading==false && productId}</p>
                             <img src="images/product-details/rating.png" alt="" />
                             <span>
-                                <span>{loading==false && lang=="pl" && pricePLN+"zł"}{loading==false && lang=="en" && priceUSD+"$"}{loading==false && lang=="ua" && priceUAH+"₴"}</span>
+                                <span style={{width:"100%"}}>{loading==false && lang=="pl" && SolidpricePLN+"zł"}{loading==false && lang=="en" && SolidpriceUSD+"$"}{loading==false && lang=="ua" && SolidpriceUAH+"₴"}</span>
                                 <div style={{marginBottom:'10px'}}>
                                     <label style={{width:'100px'}}>Quantity:</label>
                                     <input type="number" defaultValue="1" min={1} step={1} onChange={(num)=>setAmount(parseInt(num.target.value))}/>
@@ -121,9 +139,9 @@ export default function Product_detail(){
 
                                 <div style={{margin:'0 0 20px 0'}}>
                                     <label style={{width:'100px'}}>Price:</label>
-                                    {lang && lang=="pl" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && pricePLN} min={pricePLN} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>}
-                                    {lang && lang=="en" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && priceUSD} min={priceUSD} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>}
-                                    {lang && lang=="ua" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && priceUAH} min={priceUAH} onChange={(num)=>setPrice(parseFloat(num.target.value))}/>}
+                                    {lang && lang=="pl" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && pricePLN} min={SolidpricePLN} onChange={(num)=>setPricePLN(parseFloat(num.target.value))}/>}
+                                    {lang && lang=="en" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && priceUSD} min={SolidpriceUSD} onChange={(num)=>setPriceUSD(parseFloat(num.target.value))}/>}
+                                    {lang && lang=="ua" && <input style={{width:'100px'}} type="number" step={0.01} value={loading==false && priceUAH} min={SolidpriceUAH} onChange={(num)=>setPriceUAH(parseFloat(num.target.value))}/>}
                                     
                                 </div>
 
