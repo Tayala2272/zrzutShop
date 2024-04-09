@@ -2,7 +2,7 @@
 
 import { Link } from "react-router-dom";
   
-export default function CartProduct({ name, price, amount, id, image }){
+export default function CartProduct({ name, price, amount, id, image, lang, exchangeRates }){
     return(
         <tr>
             <td className="cart_product">
@@ -13,7 +13,9 @@ export default function CartProduct({ name, price, amount, id, image }){
                 <p>Product ID: {id}</p>
             </td>
             <td className="cart_price">
-                <p>{price}zł</p>
+                {lang=="pl" && <p>{(exchangeRates.PLN * price).toFixed(2)+"zł"}</p>}
+                {lang=="en" && <p>{price+"$"}</p>}
+                {lang=="ua" && <p>{(exchangeRates.UAH * price).toFixed(2)+"₴"}</p>}
             </td>
             <td className="cart_quantity">
                 <div className="cart_quantity_button">
@@ -24,7 +26,11 @@ export default function CartProduct({ name, price, amount, id, image }){
                 </div>
             </td>
             <td className="cart_total">
-                <p className="cart_total_price">{price*amount}zł</p>
+                <p className="cart_total_price">
+                    {lang=="pl" && (exchangeRates.PLN * price).toFixed(2)+"zł"}
+                    {lang=="en" && price+"$"}
+                    {lang=="ua" && (exchangeRates.UAH * price).toFixed(2)+"₴"}
+                </p>
             </td>
             <td className="cart_delete">
                 <a className="cart_quantity_delete" href=""><i className="fa fa-times"></i></a>

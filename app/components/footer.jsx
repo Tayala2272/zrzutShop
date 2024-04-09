@@ -1,5 +1,5 @@
 
-
+import logo from "../assets/logo.png"
 
 export default function Footer(){
     return(
@@ -10,7 +10,7 @@ export default function Footer(){
                     <div className="row">
                         <div className="col-sm-2">
                         <div className="companyinfo">
-                            <img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/logo.png?alt=media&token=6fb96135-16db-4471-92e5-878ea1579aa0" alt="logo"/>
+                            <img src={logo} alt="logo"/>
                         </div>
                         </div>
                         <div className="col-sm-7"></div>

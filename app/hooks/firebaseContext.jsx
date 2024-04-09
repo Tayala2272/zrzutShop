@@ -21,6 +21,7 @@
 
 // Stripe
     import Stripe from 'stripe';
+    import { loadStripe } from '@stripe/stripe-js';
 
 // context
     const context = createContext();
@@ -117,7 +118,7 @@
                 }
             }
         // Stripe
-            const stripe = 'sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx'
+            const stripeKey = 'pk_test_51Op4sOLzgMVKU2AQnmq9hXQbMXHNQXUIrGxD1wLperpHp5USK9hSbzQEln2IjAPvAaH6Iq1LQUiJ4JFG67PtYsrW00bunOBqfL';
 
         // Kategorie
             const [ category, setCategory ] = useState(null)
@@ -187,7 +188,7 @@
 
 
         return (
-            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category, stripe, exchangeRates }}>
+            <context.Provider value={{ handleLogOut, user, cart, handleGoogleSignIn, handleEmailSignIn, changeLanguage, lang, admin, category, stripeKey, exchangeRates }}>
                 {children}
             </context.Provider>
         );

@@ -8,12 +8,14 @@ import { AppContext } from "../hooks/firebaseContext";
 
 import { useNavigate } from "react-router-dom";
 
+import {loadStripe} from '@stripe/stripe-js';
+const stripePromise = loadStripe("pk_test_51Op4sOLzgMVKU2AQnmq9hXQbMXHNQXUIrGxD1wLperpHp5USK9hSbzQEln2IjAPvAaH6Iq1LQUiJ4JFG67PtYsrW00bunOBqfL")
 
 export default function Cart(){
     
     const [ message, setMessage ] = useState("");
-
-    const { cart, user } = AppContext()
+    const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
+    const { cart, user, lang, exchangeRates } = AppContext()
 
     
     useEffect(() => {
@@ -30,30 +32,42 @@ export default function Cart(){
     async function handleSubmit(event){
         event.preventDefault()
         if(user && cart){
-            const array = cart.map(x=>{return {"stripeId":x.stripeId,"price":x.price}})
+            const array = cart.map(x=>{return {
+                "price_data":
+                {
+                    "currency":"PLN",
+                    "unit_amount":(x.price*100),
+                    "product_data":{
+                        "name":x.name,
+                        "description":"Opis produktu",
+                    }
+                },
+                "quantity":x.amount
+            }})
+            setIsCheckoutLoading(true);
             console.log(array)
-            // try {
-            //     const stripe = await stripePromise;
-            //     const response = await fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+user.uid, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({
-            //             productId,
-            //             customPrice,
-            //         }),
-            //     });
-            //     const session = await response.json();
-            //     await stripe.redirectToCheckout({
-            //         sessionId: session.id,
-            //     });
-            // } catch (error) {
-            //     setError('Wystąpił błąd podczas tworzenia sesji płatności.');
-            //     console.error(error);
-            // } finally {
-            //     setIsCheckoutLoading(false);
-            // }
+            try {
+                const stripe = await stripePromise;
+                fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+user.uid, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'no-cors',
+                    body: JSON.stringify(array),
+                }).then((res)=>{
+                    console.log(res)
+                })
+                // const session = await response.json();
+                // await stripe.redirectToCheckout({
+                //     sessionId: session.id,
+                // });
+            } catch (error) {
+                // setError('Wystąpił błąd podczas tworzenia sesji płatności.');
+                console.error(error);
+            } finally {
+                setIsCheckoutLoading(false);
+            }
         }else{
             alert("Musisz się zalogować")
         }
@@ -78,7 +92,7 @@ export default function Cart(){
                     </thead>
                     <tbody>
                         {cart &&
-                            cart.map(item=>{return <CartProduct key={item.id} name={item.name} price={item.price} amount={item.amount} id={item.id} image={item.img}/>})
+                            cart.map(item=>{return <CartProduct key={item.id} name={item.name} price={item.price} amount={item.amount} id={item.id} image={item.img} lang={lang} exchangeRates={exchangeRates}/>})
                         }
                     </tbody>
                 </table>

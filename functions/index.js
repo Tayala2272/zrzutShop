@@ -1,10 +1,15 @@
 
-/*
+
 // This is your test secret API key.
 const express = require('express');
 
 const app = express();
+app.use(express.json());
 app.use(express.static('public'));
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  next();
+});
 
 
 const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
@@ -28,6 +33,7 @@ const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN
 
 app.post('/create-checkout-session/:uid', async (req, res) => {
   const uid = req.params.uid
+  const products = JSON.parse(req.body)
   if(uid != 'CUaWiLcro3Wl3OG80Wc277tXOuE3'){
     req.send('Brak uprawnień')
     return
@@ -55,7 +61,7 @@ app.post('/create-checkout-session/:uid', async (req, res) => {
           type: 'fixed_amount',
           fixed_amount: {
             amount: 0,
-            currency: 'uah',
+            currency: 'pln',
           },
           display_name: 'Free shipping',
           delivery_estimate: {
@@ -75,7 +81,7 @@ app.post('/create-checkout-session/:uid', async (req, res) => {
           type: 'fixed_amount',
           fixed_amount: {
             amount: 1500,
-            currency: 'uah',
+            currency: 'pln',
           },
           display_name: 'Next day air',
           delivery_estimate: {
@@ -91,24 +97,12 @@ app.post('/create-checkout-session/:uid', async (req, res) => {
         },
       },
     ],
-    line_items: [
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        price: 'price_1OxYukLzgMVKU2AQvb7N4ZHW',
-        quantity: 1,
-      },
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        price: 'price_1OxYukLzgMVKU2AQvb7N4ZHW',
-        quantity: 3,
-      },
-    ],
+    line_items:products,
     mode: 'payment',
-    success_url: `${YOUR_DOMAIN}?success=true`,
-    cancel_url: `${YOUR_DOMAIN}?canceled=true`,
+    success_url: `http://localhost:5173/cart?success=true`,
+    cancel_url: `http://localhost:5173/cart?canceled=true`,
   });
-
-  res.redirect(303, session.url);
+  res.send(session.url);
 });
 
 
@@ -157,5 +151,3 @@ const logger = require("firebase-functions/logger");
 
 
 exports.app = onRequest(app);
-
-*/

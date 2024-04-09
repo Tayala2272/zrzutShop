@@ -59,7 +59,7 @@ export default function Product_detail(){
                             setSolidPricePLN((tmp.price_USD * exchangeRates.PLN).toFixed(2))
                             setSolidPriceUAH((tmp.price_USD * exchangeRates.UAH).toFixed(2))
                             setImages(imageUrlArray)
-                            setStripeId(tmp.stripeID)
+                            // setStripeId(tmp.stripeID)
                             await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
                                 setThumbnailImg(tmp)
                                 setImages([tmp, ...imageUrlArray])
@@ -88,13 +88,13 @@ export default function Product_detail(){
     function handleSubmit(event){
         event.preventDefault()
         if(lang=="pl"){
-            AddToCart(productId,stripeId,amount,user,pricePLN/exchangeRates.PLN,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+            AddToCart(productId,amount,user,(pricePLN/exchangeRates.PLN).toFixed(2),product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
         }
         if(lang=="en"){
-            AddToCart(productId,stripeId,amount,user,priceUSD,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+            AddToCart(productId,amount,user,priceUSD.toFixed(2),product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
         }
         if(lang=="ua"){
-            AddToCart(productId,stripeId,amount,user,pricePLN/exchangeRates.UAH,product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+            AddToCart(productId,amount,user,(pricePLN/exchangeRates.UAH).toFixed(2),product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
         }
     }
 

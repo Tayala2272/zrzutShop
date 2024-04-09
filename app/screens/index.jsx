@@ -1,6 +1,8 @@
 
 import Produkty from "../components/produkty/Produkty"
 
+import undraw from "../assets/undraw.png"
+
 export default function Index(){
     return (
         <>
@@ -23,7 +25,7 @@ export default function Index(){
                                 <button type="button" className="btn btn-default get">Kup teraz</button>
                             </div>
                             <div className="col-sm-6">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/undraw_In_love_6sq2.png?alt=media&token=6f0e82c3-0391-4257-b514-c775be849252" className="girl img-responsive" alt="" />
+                                <img src={undraw} className="girl img-responsive" alt="" />
                                 {/* <img src="images/home/pricing.png" className="pricing" alt="" /> */}
                             </div>
                             </div>
@@ -35,7 +37,7 @@ export default function Index(){
                                 <button type="button" className="btn btn-default get">Kup teraz</button>
                             </div>
                             <div className="col-sm-6">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/undraw_In_love_6sq2.png?alt=media&token=6f0e82c3-0391-4257-b514-c775be849252" className="girl img-responsive" alt="" />
+                                <img src={undraw} className="girl img-responsive" alt="" />
                                 {/* <img src="images/home/pricing.png" className="pricing" alt="" /> */}
                             </div>
                             </div>
@@ -47,7 +49,7 @@ export default function Index(){
                                 <button type="button" className="btn btn-default get">Kup teraz</button>
                             </div>
                             <div className="col-sm-6">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/undraw_In_love_6sq2.png?alt=media&token=6f0e82c3-0391-4257-b514-c775be849252" className="girl img-responsive" alt="" />
+                                <img src={undraw} className="girl img-responsive" alt="" />
                                 {/* <img src="images/home/pricing.png" className="pricing" alt="" /> */}
                             </div>
                             </div>

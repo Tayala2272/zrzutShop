@@ -23,7 +23,7 @@ export default function Add_product(){
         const [productName, setProductName] = useState('');
         const [opis, setOpis] = useState('');
         // const [cenaPln, setCenaPln] = useState('');
-        const [cenaUsd, setCenaUsd] = useState('');
+        const [cenaUsd, setCenaUsd] = useState(0);
         // const [cenaUah, setCenaUah] = useState('');
         const [brand, setBrand] = useState('');
         const [category, setCategory] = useState('');
@@ -37,7 +37,7 @@ export default function Add_product(){
 
 
     //Sprawdzenie, czy konto należy do admina
-        const { admin, stripe } = AppContext()
+        const { admin, stripeKey } = AppContext()
         if(!admin) {
             return(
                 <Error/>
@@ -83,14 +83,17 @@ export default function Add_product(){
                                     })
                                 }
                             })
+
                         // Dodawanie produktu do stripe
-                            const nazwa = productName;
+                            // const nazwa = productName;
                             // const cena_pln = cenaPln*100;
-                            const cena_usd = cenaUsd*100;
+                            // const cena_usd = cenaUsd*100;
                             // const cena_uah = cenaUah*100;
-                            let stripeID = ''
+                            // let stripeID = ''
+                            // const stripe = await stripePromise
 
                             try {
+                        /*
                                 // Tworzenie produktu
                                 const product = await stripe.products.create({
                                     name: nazwa,
@@ -118,14 +121,14 @@ export default function Add_product(){
                                 //     currency: 'uah',
                                 //     unit_amount: Math.round(cena_uah),
                                 //     tax_behavior: 'inclusive',
-                                // });
+                                // });*/
                                 
                             // Dodawanie do bazy danych nowego produktu
                                 await addDoc(collection(db, "products"), {
                                     "productName":productName,
-                                    "stripeID":stripeID,
+                                    // "stripeID":stripeID,
                                     "price_USD":cenaUsd,
-                                    "price_USD_ID":wariantUsd.id,
+                                    // "price_USD_ID":wariantUsd.id,
                                     "brand":brand,
                                     "category":category,
                                     "thumbnailImage":newThumbnailImage,

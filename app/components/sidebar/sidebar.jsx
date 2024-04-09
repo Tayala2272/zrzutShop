@@ -47,7 +47,7 @@ export default function Sidebar({max}){
                     </div>
                 </div>
                 <div className="shipping text-center">
-                <img src="images/home/shipping.jpg" alt="" />
+                <img alt="miejsce na reklame" />
                 </div>
             </div>
         </div>
