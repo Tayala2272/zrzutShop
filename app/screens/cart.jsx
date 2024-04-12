@@ -21,10 +21,10 @@ export default function Cart(){
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         if (query.get("success")) {
-            alert("Order placed! You will receive an email confirmation.");
+            alert("Złożono zamówienie!");
         }
         if (query.get("canceled")) {
-            alert("Order canceled -- continue to shop around and checkout when you're ready.");
+            alert("Zamówienie anulowane");
         }
     }, []);
 
@@ -35,7 +35,7 @@ export default function Cart(){
             const array = cart.map(x=>{return {
                 "price_data":
                 {
-                    "currency":"PLN",
+                    "currency":"pln",
                     "unit_amount":(x.price*100),
                     "product_data":{
                         "name":x.name,
@@ -48,20 +48,15 @@ export default function Cart(){
             console.log(array)
             try {
                 const stripe = await stripePromise;
-                fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+user.uid, {
+                // fetch('https://app-ae7icdkcxq-uc.a.run.app/create-checkout-session/'+user.uid, {
+                fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+lang, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    mode: 'no-cors',
                     body: JSON.stringify(array),
-                }).then((res)=>{
-                    console.log(res)
-                })
-                // const session = await response.json();
-                // await stripe.redirectToCheckout({
-                //     sessionId: session.id,
-                // });
+                }).then(res=>res.json())
+                .then(res=>window.location.href = res)                
             } catch (error) {
                 // setError('Wystąpił błąd podczas tworzenia sesji płatności.');
                 console.error(error);

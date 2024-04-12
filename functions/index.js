@@ -5,6 +5,11 @@ const express = require('express');
 
 const app = express();
 app.use(express.json());
+
+const cors = require('cors');
+app.use(cors({ origin: true }));
+
+
 app.use(express.static('public'));
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
@@ -31,18 +36,22 @@ const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN
 //   }
 // })
 
-app.post('/create-checkout-session/:uid', async (req, res) => {
-  const uid = req.params.uid
-  const products = JSON.parse(req.body)
-  if(uid != 'CUaWiLcro3Wl3OG80Wc277tXOuE3'){
-    req.send('Brak uprawnień')
-    return
+app.post('/create-checkout-session/:lang', async (req, res) => {
+  const lang = req.params.lang
+  const products = req.body
+  let payment_methods = ['card']
+  if(lang=="pl"){
+    payment_methods = ['card','blik','p24','paypal','klarna']
+  }
+  if(lang=="en"){
+    payment_methods = ['card','klarna']
+  }
+  if(lang=="ua"){
+    payment_methods = ['card','klarna']
+    // card, acss_debit, affirm, afterpay_clearpay, alipay, au_becs_debit, bacs_debit, bancontact, blik, boleto, cashapp, customer_balance, eps, fpx, giropay, grabpay, ideal, klarna, konbini, link, oxxo, p24, paynow, paypal, pix, promptpay, sepa_debit, sofort, swish, us_bank_account, wechat_pay, revolut_pay, zip'
   }
   const session = await stripe.checkout.sessions.create({
-    payment_method_types:[
-        'card',
-        // card, acss_debit, affirm, afterpay_clearpay, alipay, au_becs_debit, bacs_debit, bancontact, blik, boleto, cashapp, customer_balance, eps, fpx, giropay, grabpay, ideal, klarna, konbini, link, oxxo, p24, paynow, paypal, pix, promptpay, sepa_debit, sofort, swish, us_bank_account, wechat_pay, revolut_pay, zip'
-    ],
+    payment_method_types: payment_methods,
     shipping_address_collection: {
       allowed_countries: ['PL', 'UA'],
     },
@@ -99,10 +108,12 @@ app.post('/create-checkout-session/:uid', async (req, res) => {
     ],
     line_items:products,
     mode: 'payment',
+    // success_url: `https://zozuladrop.pl/cart?success=true`,
+    // cancel_url: `https://zozuladrop.pl/cart?canceled=true`,
     success_url: `http://localhost:5173/cart?success=true`,
     cancel_url: `http://localhost:5173/cart?canceled=true`,
   });
-  res.send(session.url);
+  res.send(JSON.stringify(session.url));
 });
 
 
