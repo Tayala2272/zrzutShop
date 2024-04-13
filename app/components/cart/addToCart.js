@@ -30,24 +30,20 @@ export default async function AddToCart(id,amount,user,price,name,img){
             docRef = await setDoc(docSnap.ref, {
                 uid: user.uid,
                 id: id,
-                // stripeId: stripeId,
                 amount: amount + docSnap.data().amount,
                 price: price,
                 name: name,
                 img: img,
-                expirationTime: null
             });
             docRef=true
         } else {
             docRef = await addDoc(collRef, {
                 uid: user.uid,
                 id: id,
-                // stripeId: stripeId,
                 amount: amount,
                 price: price,
                 name: name,
                 img: img,
-                expirationTime: null
             });
         }
 

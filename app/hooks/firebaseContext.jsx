@@ -110,7 +110,7 @@
 
         // Język
             const [ lang, setLang ] = useState(i18next.language)
-            if(lang==""){lang="pl"}
+            if(lang==""){setLang("pl")}
             function changeLanguage(lg) {
                 if(lg=="pl"||lg=="en"||lg=="ua"){
                     i18n.changeLanguage(lg)

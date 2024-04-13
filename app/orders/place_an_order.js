@@ -1,15 +1,14 @@
 
 
-import React, { useCallback, useState, useEffect } from "react";
-
 import { AppContext } from "../hooks/firebaseContext";
 
-import { loadStripe } from '@stripe/stripe-js';
+import { db, firebase } from "../../firebase"
+import { addDoc, collection } from "firebase/firestore";
 
-export default async function Place_an_order(payment) {
+
+export default async function Place_an_order(cart, user, exchangeRates) {
 
     // Sprawdzenie, czy użytkownik jest zalogowany
-        const { cart, user, exchangeRates, stripe } = AppContext()
         if(!user){
             return "Musisz się zalogować, aby złożyć zamówienie"
         }
@@ -19,30 +18,19 @@ export default async function Place_an_order(payment) {
             return "Brak produktów w koszyku"
         }
 
-    // Create checkout
-        const stripePromise = loadStripe(stripe);
-        setIsCheckoutLoading(true);
-        try {
-            const stripe = await stripe;
-            const response = await fetch('/create-checkout-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    productId,
-                    customPrice,
-                }),
-            });
-            const session = await response.json();
-            await stripe.redirectToCheckout({
-                sessionId: session.id,
-            });
-        } catch (error) {
-            return 'Wystąpił błąd podczas tworzenia sesji płatności.'
-        } finally {
-            setIsCheckoutLoading(false);
-        }
+    // Place an order
+        await addDoc(collection(db, "orders"), {
+            "uid":user.uid,
+            "payment":false,
+            "data":"dzisiaj",
+            "products": cart
+        }).then((snapshot)=>{
+            const key = snapshot.id;
+            console.log("--------------",key)
+        }).catch((error)=>{
+            console.log(error)
+        })
+
         
 
 }

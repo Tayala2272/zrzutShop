@@ -8,8 +8,8 @@ import { AppContext } from "../hooks/firebaseContext";
 
 import { useNavigate } from "react-router-dom";
 
-import {loadStripe} from '@stripe/stripe-js';
-const stripePromise = loadStripe("pk_test_51Op4sOLzgMVKU2AQnmq9hXQbMXHNQXUIrGxD1wLperpHp5USK9hSbzQEln2IjAPvAaH6Iq1LQUiJ4JFG67PtYsrW00bunOBqfL")
+import Place_an_order from "../orders/place_an_order";
+
 
 export default function Cart(){
     
@@ -29,75 +29,8 @@ export default function Cart(){
     }, []);
 
       
-    async function handleSubmit(method){
-        // event.preventDefault()
-        if(user && cart){
-            const array = cart.map(x=>{
-                if(lang == "pl"){
-                    return {
-                        "price_data":
-                        {
-                            "currency":"pln",
-                            "unit_amount":(x.price*100*exchangeRates.PLN).toFixed(),
-                            "product_data":{
-                                "name":x.name,
-                                "description":"Opis produktu",
-                            }
-                        },
-                        "quantity":x.amount
-                    }
-                }
-                if(lang == "en"){
-                    return {
-                        "price_data":
-                        {
-                            "currency":"usd",
-                            "unit_amount":(x.price*100).toFixed(),
-                            "product_data":{
-                                "name":x.name,
-                                "description":"Opis produktu",
-                            }
-                        },
-                        "quantity":x.amount
-                    }
-                }
-                if(lang == "ua"){
-                    return {
-                        "price_data":
-                        {
-                            "currency":"uah",
-                            "unit_amount":(x.price*100*exchangeRates.UAH).toFixed(),
-                            "product_data":{
-                                "name":x.name,
-                                "description":"Opis produktu",
-                            }
-                        },
-                        "quantity":x.amount
-                    }
-                }
-            })
-            setIsCheckoutLoading(true);
-            console.log(array)
-            try {
-                const stripe = await stripePromise;
-                fetch('https://app-ae7icdkcxq-uc.a.run.app/create-checkout-session/'+method, {
-                // fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+method, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(array),
-                }).then(res=>res.json())
-                .then(res=>window.location.href = res)                
-            } catch (error) {
-                // setError('Wystąpił błąd podczas tworzenia sesji płatności.');
-                console.error(error);
-            } finally {
-                setIsCheckoutLoading(false);
-            }
-        }else{
-            alert("Musisz się zalogować")
-        }
+    async function handleSubmit(){
+        await Place_an_order(cart,user,exchangeRates)
     }
 
 
@@ -128,10 +61,10 @@ export default function Cart(){
             </section>
             
             {user && lang=="pl" && <>
-                <button type="submit" onClick={()=>handleSubmit('card')}>Zapłać kartą</button>
-                <button type="submit" onClick={()=>handleSubmit('klarna')}>Zapłać krypto</button>
-                <button type="submit" onClick={()=>handleSubmit('blik')}>Zapłać blik</button>
-                <button type="submit" onClick={()=>handleSubmit('paypal')}>Zapłać paypal</button>
+                <button type="submit" onClick={()=>handleSubmit()}>Zapłać kartą</button>
+                <button type="submit" onClick={()=>handleSubmit()}>Zapłać krypto</button>
+                <button type="submit" onClick={()=>handleSubmit()}>Zapłać blik</button>
+                <button type="submit" onClick={()=>handleSubmit()}>Zapłać paypal</button>
             </>}
 
             {user && lang=="en" && <>
