@@ -36,22 +36,82 @@ const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN
 //   }
 // })
 
-app.post('/create-checkout-session/:lang', async (req, res) => {
-  const lang = req.params.lang
+app.post('/create-checkout-session/:methods', async (req, res) => {
+  const methods = [req.params.methods]
   const products = req.body
-  let payment_methods = ['card']
-  if(lang=="pl"){
-    payment_methods = ['card','blik','p24','paypal','klarna']
+  const currency = products[0].price_data.currency
+  let shipping = [
+    {
+      shipping_rate_data: {
+        type: 'fixed_amount',
+        fixed_amount: {
+          amount: 0,
+          currency: 'pln',
+        },
+        display_name: 'Free shipping',
+        delivery_estimate: {
+          minimum: {
+            unit: 'business_day',
+            value: 5,
+          },
+          maximum: {
+            unit: 'business_day',
+            value: 7,
+          },
+        },
+      },
+    },
+    {
+      shipping_rate_data: {
+        type: 'fixed_amount',
+        fixed_amount: {
+          amount: 1500,
+          currency: 'pln',
+        },
+        display_name: 'Next day air',
+        delivery_estimate: {
+          minimum: {
+            unit: 'business_day',
+            value: 1,
+          },
+          maximum: {
+            unit: 'business_day',
+            value: 1,
+          },
+        },
+      },
+    },
+  ]
+  if(currency=="pln"){
+    shipping[0].shipping_rate_data.fixed_amount.amount = 0
+    shipping[0].shipping_rate_data.fixed_amount.currency = currency
+    shipping[1].shipping_rate_data.fixed_amount.amount = 1500
+    shipping[1].shipping_rate_data.fixed_amount.currency = currency
   }
-  if(lang=="en"){
-    payment_methods = ['card','klarna']
+  if(currency=="usd"){
+    shipping[0].shipping_rate_data.fixed_amount.amount = 0
+    shipping[0].shipping_rate_data.fixed_amount.currency = currency
+    shipping[1].shipping_rate_data.fixed_amount.amount = 500
+    shipping[1].shipping_rate_data.fixed_amount.currency = currency
   }
-  if(lang=="ua"){
-    payment_methods = ['card','klarna']
-    // card, acss_debit, affirm, afterpay_clearpay, alipay, au_becs_debit, bacs_debit, bancontact, blik, boleto, cashapp, customer_balance, eps, fpx, giropay, grabpay, ideal, klarna, konbini, link, oxxo, p24, paynow, paypal, pix, promptpay, sepa_debit, sofort, swish, us_bank_account, wechat_pay, revolut_pay, zip'
+  if(currency=="uah"){
+    shipping[0].shipping_rate_data.fixed_amount.amount = 0
+    shipping[0].shipping_rate_data.fixed_amount.currency = currency
+    shipping[1].shipping_rate_data.fixed_amount.amount = 5000
+    shipping[1].shipping_rate_data.fixed_amount.currency = currency
   }
+  // if(lang=="pl"){
+  //   payment_methods = ['card','blik','p24','paypal','klarna']
+  // }
+  // if(lang=="en"){
+  //   payment_methods = ['card','klarna']
+  // }
+  // if(lang=="ua"){
+  //   payment_methods = ['card','klarna']
+  //   // card, acss_debit, affirm, afterpay_clearpay, alipay, au_becs_debit, bacs_debit, bancontact, blik, boleto, cashapp, customer_balance, eps, fpx, giropay, grabpay, ideal, klarna, konbini, link, oxxo, p24, paynow, paypal, pix, promptpay, sepa_debit, sofort, swish, us_bank_account, wechat_pay, revolut_pay, zip'
+  // }
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: payment_methods,
+    payment_method_types: methods,
     shipping_address_collection: {
       allowed_countries: ['PL', 'UA'],
     },
@@ -64,54 +124,13 @@ app.post('/create-checkout-session/:lang', async (req, res) => {
     phone_number_collection: {
       enabled: true,
     },
-    shipping_options: [
-      {
-        shipping_rate_data: {
-          type: 'fixed_amount',
-          fixed_amount: {
-            amount: 0,
-            currency: 'pln',
-          },
-          display_name: 'Free shipping',
-          delivery_estimate: {
-            minimum: {
-              unit: 'business_day',
-              value: 5,
-            },
-            maximum: {
-              unit: 'business_day',
-              value: 7,
-            },
-          },
-        },
-      },
-      {
-        shipping_rate_data: {
-          type: 'fixed_amount',
-          fixed_amount: {
-            amount: 1500,
-            currency: 'pln',
-          },
-          display_name: 'Next day air',
-          delivery_estimate: {
-            minimum: {
-              unit: 'business_day',
-              value: 1,
-            },
-            maximum: {
-              unit: 'business_day',
-              value: 1,
-            },
-          },
-        },
-      },
-    ],
+    shipping_options: shipping,
     line_items:products,
     mode: 'payment',
-    // success_url: `https://zozuladrop.pl/cart?success=true`,
-    // cancel_url: `https://zozuladrop.pl/cart?canceled=true`,
-    success_url: `http://localhost:5173/cart?success=true`,
-    cancel_url: `http://localhost:5173/cart?canceled=true`,
+    success_url: `https://zozuladrop.pl/cart?success=true`,
+    cancel_url: `https://zozuladrop.pl/cart?canceled=true`,
+    // success_url: `http://localhost:5173/cart`,
+    // cancel_url: `http://localhost:5173/cart`,
   });
   res.send(JSON.stringify(session.url));
 });

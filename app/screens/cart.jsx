@@ -14,7 +14,7 @@ const stripePromise = loadStripe("pk_test_51Op4sOLzgMVKU2AQnmq9hXQbMXHNQXUIrGxD1
 export default function Cart(){
     
     const [ message, setMessage ] = useState("");
-    const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
+    const [ isCheckoutLoading, setIsCheckoutLoading ] = useState(false)
     const { cart, user, lang, exchangeRates } = AppContext()
 
     
@@ -29,27 +29,59 @@ export default function Cart(){
     }, []);
 
       
-    async function handleSubmit(event){
-        event.preventDefault()
+    async function handleSubmit(method){
+        // event.preventDefault()
         if(user && cart){
-            const array = cart.map(x=>{return {
-                "price_data":
-                {
-                    "currency":"pln",
-                    "unit_amount":(x.price*100),
-                    "product_data":{
-                        "name":x.name,
-                        "description":"Opis produktu",
+            const array = cart.map(x=>{
+                if(lang == "pl"){
+                    return {
+                        "price_data":
+                        {
+                            "currency":"pln",
+                            "unit_amount":(x.price*100*exchangeRates.PLN).toFixed(),
+                            "product_data":{
+                                "name":x.name,
+                                "description":"Opis produktu",
+                            }
+                        },
+                        "quantity":x.amount
                     }
-                },
-                "quantity":x.amount
-            }})
+                }
+                if(lang == "en"){
+                    return {
+                        "price_data":
+                        {
+                            "currency":"usd",
+                            "unit_amount":(x.price*100).toFixed(),
+                            "product_data":{
+                                "name":x.name,
+                                "description":"Opis produktu",
+                            }
+                        },
+                        "quantity":x.amount
+                    }
+                }
+                if(lang == "ua"){
+                    return {
+                        "price_data":
+                        {
+                            "currency":"uah",
+                            "unit_amount":(x.price*100*exchangeRates.UAH).toFixed(),
+                            "product_data":{
+                                "name":x.name,
+                                "description":"Opis produktu",
+                            }
+                        },
+                        "quantity":x.amount
+                    }
+                }
+            })
             setIsCheckoutLoading(true);
             console.log(array)
             try {
                 const stripe = await stripePromise;
-                // fetch('https://app-ae7icdkcxq-uc.a.run.app/create-checkout-session/'+user.uid, {
-                fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+lang, {
+                fetch('https://app-ae7icdkcxq-uc.a.run.app/create-checkout-session/'+method, {
+                // fetch('http://localhost:5001/zrzutshop/us-central1/app/create-checkout-session/'+method, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -95,15 +127,23 @@ export default function Cart(){
             </div>
             </section>
             
-            {user && <>
-            
-                <form onSubmit={handleSubmit}>
-                    <button type="submit">Checkout</button>
-                </form>
+            {user && lang=="pl" && <>
+                <button type="submit" onClick={()=>handleSubmit('card')}>Zapłać kartą</button>
+                <button type="submit" onClick={()=>handleSubmit('klarna')}>Zapłać krypto</button>
+                <button type="submit" onClick={()=>handleSubmit('blik')}>Zapłać blik</button>
+                <button type="submit" onClick={()=>handleSubmit('paypal')}>Zapłać paypal</button>
+            </>}
 
-                {/* <form action={"http://localhost:5001/zrzutshop/us-central1/app/create-product/"+user.uid} method="POST">
-                    <button type="submit">Dodaj</button>
-                </form> */}
+            {user && lang=="en" && <>
+                <button type="submit" onClick={()=>handleSubmit('card')}>Zapłać kartą</button>
+                <button type="submit" onClick={()=>handleSubmit('klarna')}>Zapłać krypto</button>
+                <button type="submit" onClick={()=>handleSubmit('paypal')}>Zapłać paypal</button>
+            </>}
+
+            {user && lang=="ua" && <>
+                <button type="submit" onClick={()=>handleSubmit('card')}>Zapłać kartą</button>
+                <button type="submit" onClick={()=>handleSubmit('klarna')}>Zapłać krypto</button>
+                <button type="submit" onClick={()=>handleSubmit('paypal')}>Zapłać paypal</button>
             </>}
 
             {/* <section id="do_action">
