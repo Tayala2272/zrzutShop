@@ -6,9 +6,8 @@ import CartProduct from "../components/cart/cartProduct";
 
 import { AppContext } from "../hooks/firebaseContext";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-import Place_an_order from "../orders/place_an_order";
 
 
 export default function Cart(){
@@ -29,8 +28,11 @@ export default function Cart(){
     }, []);
 
       
+    const navigate = useNavigate();
     async function handleSubmit(){
-        await Place_an_order(cart,user,exchangeRates)
+        await Place_an_order(cart,user,exchangeRates).then(()=>{
+            navigate('/account/orders')
+        })
     }
 
 
@@ -60,23 +62,8 @@ export default function Cart(){
             </div>
             </section>
             
-            {user && lang=="pl" && <>
-                <button type="submit" onClick={()=>handleSubmit()}>Zapłać kartą</button>
-                <button type="submit" onClick={()=>handleSubmit()}>Zapłać krypto</button>
-                <button type="submit" onClick={()=>handleSubmit()}>Zapłać blik</button>
-                <button type="submit" onClick={()=>handleSubmit()}>Zapłać paypal</button>
-            </>}
-
-            {user && lang=="en" && <>
-                <button type="submit" onClick={()=>handleSubmit('card')}>Zapłać kartą</button>
-                <button type="submit" onClick={()=>handleSubmit('klarna')}>Zapłać krypto</button>
-                <button type="submit" onClick={()=>handleSubmit('paypal')}>Zapłać paypal</button>
-            </>}
-
-            {user && lang=="ua" && <>
-                <button type="submit" onClick={()=>handleSubmit('card')}>Zapłać kartą</button>
-                <button type="submit" onClick={()=>handleSubmit('klarna')}>Zapłać krypto</button>
-                <button type="submit" onClick={()=>handleSubmit('paypal')}>Zapłać paypal</button>
+            {user && <>
+                <Link to={"/place_an_order"}><button type="submit">Złóż zamówienie</button></Link>
             </>}
 
             {/* <section id="do_action">
