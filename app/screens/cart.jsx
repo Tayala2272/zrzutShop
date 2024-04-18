@@ -8,12 +8,14 @@ import { AppContext } from "../hooks/firebaseContext";
 
 import { useNavigate, Link } from "react-router-dom";
 
+import Place_an_order from "../orders/place_an_order";
+
 
 
 export default function Cart(){
     
     const [ message, setMessage ] = useState("");
-    const [ isCheckoutLoading, setIsCheckoutLoading ] = useState(false)
+    const [ isLoading, setIsLoading ] = useState(false)
     const { cart, user, lang, exchangeRates } = AppContext()
 
     
@@ -30,10 +32,14 @@ export default function Cart(){
       
     const navigate = useNavigate();
     async function handleSubmit(){
-        await Place_an_order(cart,user,exchangeRates).then(()=>{
+        setIsLoading(true)
+        await Place_an_order(cart,user).then(()=>{
+            setIsLoading(false)
             navigate('/account/orders')
         })
     }
+
+
 
 
     return(
@@ -63,7 +69,7 @@ export default function Cart(){
             </section>
             
             {user && <>
-                <Link to={"/place_an_order"}><button type="submit">Złóż zamówienie</button></Link>
+                <button type="submit" onClick={()=>handleSubmit()}>Złóż zamówienie</button>
             </>}
 
             {/* <section id="do_action">

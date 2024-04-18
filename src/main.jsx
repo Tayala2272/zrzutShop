@@ -24,8 +24,6 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
   import Account from '../app/screens/account.jsx';
   import Orders from '../app/screens/orders.jsx';
   import Order from '../app/screens/order.jsx';
-  import Pay from '../app/orders/pay.jsx';
-  import Place_an_order from '../app/orders/place_an_order.jsx';
 
 // JS
   import $ from 'jquery';
@@ -66,8 +64,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/account" element={<Account />} />
           <Route path="/account/orders" element={<Orders />} />
           <Route path="/account/order/:id" element={<Order />} />
-          <Route path="/payment/:method/:id" element={<Pay />} />
-          <Route path="/place_an_order" element={<Place_an_order />} />
 
 
           <Route path="/contact" element={<Contact />} />
