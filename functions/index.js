@@ -112,7 +112,12 @@ const session = await stripe.checkout.sessions.create({
   mode: 'payment',
   success_url: `https://zozuladrop.pl/cart?success=true`,
   cancel_url: `https://zozuladrop.pl/cart?canceled=true`,
-  metadata: { customSessionId: customSessionId } // Id sesji
+  metadata: { customSessionId: customSessionId }, // Id sesji
+  payment_intent_data: {
+    metadata: {
+      customSessionId: customSessionId
+    }
+  }
 });
 response.send(JSON.stringify(session.url));
 });
