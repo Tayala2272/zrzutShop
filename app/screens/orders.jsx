@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import {db} from "../../firebase"
-import { getDocs, collection, query, where } from "firebase/firestore"
+import { getDocs, collection, query, where, orderBy } from "firebase/firestore"
 
 import { Link } from "react-router-dom";
 
@@ -25,7 +25,7 @@ export default function Orders(){
 
 
     async function conn(database){
-        const q = query(collection(db, database), where('uid', '==', user.uid));
+        const q = query(collection(db, database), where('uid', '==', user.uid), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
         const ordersArray = [];
         querySnapshot.forEach((doc) => {

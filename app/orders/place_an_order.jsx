@@ -2,7 +2,7 @@
 
 
 import { db } from "../../firebase"
-import { addDoc, collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs, deleteDoc, doc, Timestamp } from "firebase/firestore";
 
 
 export default async function Place_an_order(cart,user,navigate) {
@@ -49,7 +49,9 @@ export default async function Place_an_order(cart,user,navigate) {
                         "uid":user.uid,
                         "payment":false,
                         "data":date,
-                        "paymentStatus":'none', // None, failed, succeeded, completed, expired
+                        "createdAt": Timestamp.now(),
+                        "paymentStatus":'none', // none, canceled, failed, processing, requiresAction, succeeded
+                        "checkoutStatus":'none', // none, failed, succeeded, completed, expired
                         "products": array,
                         "total_price":sum
                     }).then(async (snapshot)=>{

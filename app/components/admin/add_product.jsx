@@ -19,17 +19,44 @@ import Error from "../../screens/error";
 
 
 export default function Add_product(){
+    
     // Dane:
-        const [productName, setProductName] = useState('');
-        const [opis, setOpis] = useState('');
-        // const [cenaPln, setCenaPln] = useState('');
+        const [productNamePL, setProductNamePL] = useState('');
+        const [productNameEN, setProductNameEN] = useState('');
+        const [productNameUA, setProductNameUA] = useState('');
+
+        const [opisPL, setOpisPL] = useState('');
+        const [opisEN, setOpisEN] = useState('');
+        const [opisUA, setOpisUA] = useState('');
+
         const [cenaUsd, setCenaUsd] = useState(0);
-        // const [cenaUah, setCenaUah] = useState('');
+
         const [brand, setBrand] = useState('');
-        const [category, setCategory] = useState('');
+
+        const [MainCategory, setMainCategory] = useState('');
+        const [SubCategory, setSubCategory] = useState('');
+
         const [thumbnailImage, setThumbnailImage] = useState('');
         const [otherImages, setOtherImages] = useState([]);
-        const [details, setDetails] = useState([{ title: '', content: '' }]);
+        const [details, setDetails] = useState([{ titlePL:'',contentPL:'',titleEN:'',contentEN:'',titleUA:'',contentUA:'' }]);
+        
+        const [selectedCategory, setSelectedCategory] = useState('');
+        const [subcategories, setSubcategories] = useState([]);
+
+        const handleCategoryChange = (e) => {
+            const tmp = e.target.value;
+            setSelectedCategory(tmp);
+            setMainCategory(tmp);
+
+            const subcats = category[tmp];
+            if (typeof subcats === 'object' && subcats !== null) {
+                // To jest obiekt, więc przekształć go w tablicę
+                setSubcategories(Object.values(subcats));
+            } else {
+                // To jest pojedyncza wartość, ustaw ją bezpośrednio
+                setSubcategories([subcats]);
+            }
+        };
         
     // Język
         const { t } = useTranslation();
@@ -37,7 +64,7 @@ export default function Add_product(){
 
 
     //Sprawdzenie, czy konto należy do admina
-        const { admin, stripeKey } = AppContext()
+        const { admin, category } = AppContext()
         if(!admin) {
             return(
                 <Error/>
@@ -84,53 +111,26 @@ export default function Add_product(){
                                 }
                             })
 
-                        // Dodawanie produktu do stripe
-                            // const nazwa = productName;
-                            // const cena_pln = cenaPln*100;
-                            // const cena_usd = cenaUsd*100;
-                            // const cena_uah = cenaUah*100;
-                            // let stripeID = ''
-                            // const stripe = await stripePromise
+                            let tmpCategory = MainCategory
+                            if(subcategories.length>1){
+                                tmpCategory = MainCategory+"/"+SubCategory
+                            }
 
                             try {
-                        /*
-                                // Tworzenie produktu
-                                const product = await stripe.products.create({
-                                    name: nazwa,
-                                    description: opis,
-                                });
-                                stripeID = product.id
-                            
-                                // Tworzenie wariantów ceny dla różnych walut
-                                // const wariantPln = await stripe.prices.create({
-                                //     product: product.id,
-                                //     currency: 'pln',
-                                //     unit_amount: Math.round(cena_pln),
-                                //     tax_behavior: 'inclusive',
-                                // });
-                            
-                                const wariantUsd = await stripe.prices.create({
-                                    product: product.id,
-                                    currency: 'usd',
-                                    unit_amount: Math.round(cena_usd),
-                                    tax_behavior: 'inclusive',
-                                });
-                            
-                                // const wariantUah = await stripe.prices.create({
-                                //     product: product.id,
-                                //     currency: 'uah',
-                                //     unit_amount: Math.round(cena_uah),
-                                //     tax_behavior: 'inclusive',
-                                // });*/
-                                
                             // Dodawanie do bazy danych nowego produktu
                                 await addDoc(collection(db, "products"), {
-                                    "productName":productName,
-                                    // "stripeID":stripeID,
+                                    "productNamePL":productNamePL,
+                                    "productNameEN":productNameEN,
+                                    "productNameUA":productNameUA,
+
+                                    "opisPL": opisPL,
+                                    "opisEN": opisEN,
+                                    "opisUA": opisUA,
+
                                     "price_USD":cenaUsd,
-                                    // "price_USD_ID":wariantUsd.id,
+
                                     "brand":brand,
-                                    "category":category,
+                                    "category":MainCategory,
                                     "thumbnailImage":newThumbnailImage,
                                     "otherImages":newOtherImages,
                                     "details":details
@@ -163,6 +163,7 @@ export default function Add_product(){
             newDetails[index][key] = value;
             setDetails(newDetails);
         };
+
     
         const addNewDetail = () => {
             setDetails([...details, { title: '', content: '' }]);
@@ -175,34 +176,62 @@ export default function Add_product(){
                 <div className="container" style={{textAlign:"center"}}>
                     <h2>Dodawanie nowego produktu:</h2>
                     <form onSubmit={handleSubmit}>
-                        <label>Nazwa produktu:<br/><input type="text" placeholder="Telewizor" value={productName} onChange={(e) => setProductName(e.target.value)} required/></label><br/><br/>
-                        <label htmlFor="opis">Opis produktu:</label>
-                        <textarea id="opis" name="opis" value={opis} onChange={(e) => setOpis(e.target.value)} required />
+
+                        <h3 style={{marginTop:"80px"}}>Podaj nazwę</h3>
+                        <label>Nazwa produktu (PL):<br/><input type="text" placeholder="Telewizor" value={productNamePL} onChange={(e) => setProductNamePL(e.target.value)} required/></label><br/><br/>
+                        <label>Nazwa produktu (EN):<br/><input type="text" placeholder="Telewizor" value={productNameEN} onChange={(e) => setProductNameEN(e.target.value)} required/></label><br/><br/>
+                        <label>Nazwa produktu (UA):<br/><input type="text" placeholder="Telewizor" value={productNameUA} onChange={(e) => setProductNameUA(e.target.value)} required/></label><br/><br/>
+
+                        <h3 style={{marginTop:"80px"}}>Napisz opis</h3>
+                        <label htmlFor="opis">Opis produktu (PL):</label>
+                        <textarea id="opis" value={opisPL} onChange={(e) => setOpisPL(e.target.value)} required />
+                        <label htmlFor="opis">Opis produktu (EN):</label>
+                        <textarea id="opis" value={opisEN} onChange={(e) => setOpisEN(e.target.value)} required />
+                        <label htmlFor="opis">Opis produktu (UA):</label>
+                        <textarea id="opis" value={opisUA} onChange={(e) => setOpisUA(e.target.value)} required />
+
                         <br/><br/>
-                        {/* <label htmlFor="cena_pln">Cena (PLN): </label>
-                        <input type="number" id="cena_pln" min={0} step={0.01} placeholder="00.00" name="cena_pln" value={cenaPln} onChange={(e) => setCenaPln(e.target.value)} required />
-                        <br/><br/> */}
+                        <h3 style={{marginTop:"80px"}}>Ustal cene</h3>
                         <label htmlFor="cena_usd">Cena (USD): </label>
                         <input type="number" id="cena_usd" min={0} step={0.01} placeholder="00.00" name="cena_usd" value={cenaUsd} onChange={(e) => setCenaUsd(e.target.value)} required />
                         <br/><br/>
-                        {/* <label htmlFor="cena_uah">Cena (UAH): </label>
-                        <input type="number" id="cena_uah" min={0} step={0.01} placeholder="00.00" name="cena_uah" value={cenaUah} onChange={(e) => setCenaUah(e.target.value)} required />
-                        <br/><br/> */}
+
+                        <h3 style={{marginTop:"80px"}}>Napisz markę</h3>
                         <label>Marka:<br/><input type="text" value={brand} placeholder="Samsung" onChange={(e) => setBrand(e.target.value)} required/></label><br/><br/>
+
+                        <h3 style={{marginTop:"80px"}}>Wybierz kategorie</h3>
                         <label>Kategoria: 
-                        <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+                        <select value={MainCategory} onChange={(e) => handleCategoryChange(e)} required>
                             <option value="" disabled defaultValue={true}>Wybierz kategorie</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Clothing">Clothing</option>
-                            <option value="Books">Books</option>
+                            {Object.keys(category).map((category) => (
+                                <option key={category} value={category}>{category}</option>
+                            ))}
                         </select>
+                        <br/><br/>
+                        {subcategories.length > 0 && (
+                            <div>
+                            <label htmlFor="subcategorySelect">Wybierz podkategorię:</label>
+                            <select id="subcategorySelect" onChange={(e) => setSubCategory(e.target.value)}>
+                                {subcategories.map((subcat, index) => (
+                                <option key={index} value={subcat}>{subcat}</option>
+                                ))}
+                            </select>
+                            </div>
+                        )}
+
                         </label><br/><br/>
+                        <h3  style={{marginTop:"80px"}}>Wybierz zdjęcia</h3>
                         <label>Wybierz miniaturke produktu: <input type="file" onChange={(e) => setThumbnailImage(e.target.files[0])} required/></label><br/><br/>
                         <label>Wybierz reszte zdjęć produktu: <input type="file" multiple onChange={(e) => setOtherImages(e.target.files)}/></label><br/><br/>
                         {details.map((detail, index) => (
-                            <div key={index}>
-                                <label>Tytuł detalu: <input type="text" placeholder="Rozmiar ekranu" value={detail.title} onChange={(e) => handleDetailChange(index, 'title', e.target.value)} required/></label>
-                                <label>Zawartość detalu: <textarea value={detail.content} placeholder="44 cale" onChange={(e) => handleDetailChange(index, 'content', e.target.value)} required/></label>
+                            <div key={index} style={{marginTop:"80px"}}>
+                                <h4>Detal numer: {index+1}</h4>
+                                <label>Tytuł detalu (PL): <input type="text" placeholder="Rozmiar ekranu" value={detail.titlePL} onChange={(e) => handleDetailChange(index, 'titlePL', e.target.value)} required/></label>
+                                <label>Zawartość detalu (PL): <textarea value={detail.contentPL} placeholder="44 cale" onChange={(e) => handleDetailChange(index, 'contentPL', e.target.value)} required/></label><br/>
+                                <label>Tytuł detalu (EN): <input type="text" placeholder="Rozmiar ekranu" value={detail.titleEN} onChange={(e) => handleDetailChange(index, 'titleEN', e.target.value)} required/></label>
+                                <label>Zawartość detalu (EN): <textarea value={detail.contentEN} placeholder="44 cale" onChange={(e) => handleDetailChange(index, 'contentEN', e.target.value)} required/></label><br/>
+                                <label>Tytuł detalu (UA): <input type="text" placeholder="Rozmiar ekranu" value={detail.titleUA} onChange={(e) => handleDetailChange(index, 'titleUA', e.target.value)} required/></label>
+                                <label>Zawartość detalu (UA): <textarea value={detail.contentUA} placeholder="44 cale" onChange={(e) => handleDetailChange(index, 'contentUA', e.target.value)} required/></label>
                             </div>
                         ))}
                         <button type="button" onClick={addNewDetail}>Dodaj detal</button><br/><br/><br/><br/><br/>

@@ -127,7 +127,11 @@ export default function Product_detail(){
                     </div>
                     <div className="col-sm-7">
                         <form className="product-information" onSubmit={handleSubmit}>
-                            <h2>{product && product.productName}</h2>
+                            <h2>
+                                {product && lang=="pl" && product.productNamePL}
+                                {product && lang=="en" && product.productNameEN}
+                                {product && lang=="ua" && product.productNameUA}
+                            </h2>
                             <p>Id produktu: {loading==false && productId}</p>
                             <img src="images/product-details/rating.png" alt="" />
                             <span>
@@ -169,10 +173,22 @@ export default function Product_detail(){
                                 </tr>
                             </thead>
                             <tbody>
-                                {product.details.map((item) => (
-                                    <tr key={item.title} style={styles.tr}>
-                                        <td style={{...styles.td,textAlign:"right"}}>{item.title}</td>
-                                        <td style={styles.td}>{item.content}</td>
+                                {product && lang=="pl" && product.details.map((item) => (
+                                    <tr key={item.titlePL} style={styles.tr}>
+                                        <td style={{...styles.td,textAlign:"right"}}>{item.titlePL}</td>
+                                        <td style={styles.td}>{item.contentPL}</td>
+                                    </tr>
+                                ))}
+                                {product && lang=="en" && product.details.map((item) => (
+                                    <tr key={item.titleEN} style={styles.tr}>
+                                        <td style={{...styles.td,textAlign:"right"}}>{item.titleEN}</td>
+                                        <td style={styles.td}>{item.contentEN}</td>
+                                    </tr>
+                                ))}
+                                {product && lang=="ua" && product.details.map((item) => (
+                                    <tr key={item.titleUA} style={styles.tr}>
+                                        <td style={{...styles.td,textAlign:"right"}}>{item.titleUA}</td>
+                                        <td style={styles.td}>{item.contentUA}</td>
                                     </tr>
                                 ))}
                             </tbody>

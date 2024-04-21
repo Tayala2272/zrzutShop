@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 // Create a reference with an initial file path and name
 
-export default function Produkt({ price, name, img, id }){
+export default function Produkt({ price, name, img, id, lang, exchangeRate }){
     const [image,setImage] = useState("")
     getDownloadURL(ref(storage, "products/"+img)).then(
         (res)=>{
@@ -21,7 +21,7 @@ export default function Produkt({ price, name, img, id }){
                     <div className="single-products">
                     <div className="productinfo text-center">
                         <img src={image} alt="" />
-                        <h2 style={{color:"black"}}>{price}$</h2>
+                        <h2 style={{color:"black"}}>{lang=="pl" && (price*exchangeRate.PLN).toFixed(2)+"zł"}{lang=="en" && price+"$"}{lang=="ua" && (price*exchangeRate.UAH).toFixed(2)+"₴"}</h2>
                         <p>{name}</p>
                         {/* <a href="" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart"></i>Add to cart</a> */}
                     </div>

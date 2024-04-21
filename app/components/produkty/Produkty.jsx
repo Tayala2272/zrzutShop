@@ -9,9 +9,12 @@ import Produkt from "./Produkt"
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { db } from "../../../firebase";
 
+import { AppContext } from "../../hooks/firebaseContext";
 
 
 export default function Produkty(){
+    const { lang, exchangeRates } = AppContext()
+
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const { category, subCategory } = useParams();
@@ -79,7 +82,7 @@ export default function Produkty(){
                         <h2 className="title text-center">Produkty</h2>
                         {loading ? (<>Loading...</>) : products.length > 0 ? (
                         products.map((product) => (
-                            <Produkt key={product.id} price={product.price} name={product.name} img={product.img} id={product.id} />
+                            <Produkt key={product.id} price={product.price} name={product.name} img={product.img} id={product.id} lang={lang} exchangeRate={exchangeRates} />
                         ))
                         ) : (
                         <>Nie znaleziono żadnych produktów</>

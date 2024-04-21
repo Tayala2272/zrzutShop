@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 // Stripe keys
 const stripe = require('stripe')('sk_test_51Op4sOLzgMVKU2AQ3QXLVwBwYePzavHP09NeN3acNlnU0v0hJgKQAmsg5bFHcpxu2gy9VuEaBmMgvTQmTSh461xW00jTrnyyQx');
-const endpointSecret = 'whsec_0Veid8S9BX4Y3W0yWJp5pEe3mSrl20Lu'
+const endpointSecret = 'whsec_Z5oVtwpPCKHAllnKNgAcLHKBRr6rsLnq'
 
 
 
@@ -117,6 +117,11 @@ const session = await stripe.checkout.sessions.create({
     metadata: {
       customSessionId: customSessionId
     }
+  },
+  checkout_session_data: {
+    metadata: {
+      customSessionId: customSessionId
+    }
   }
 });
 response.send(JSON.stringify(session.url));
@@ -152,22 +157,23 @@ exports.api = functions.https.onRequest(app);
     console.log('sessionID',customSessionId)
 
 
-    let paymentStatus = '';
+    let checkoutStatus = 'none';
+    let paymentStatus = 'none';
 
     // Handle the event
     switch (event.type) {
       // Checkout
       case 'checkout.session.async_payment_failed':
-        paymentStatus = 'checkout_failed'
+        checkoutStatus = 'checkout_failed'
         break;
       case 'checkout.session.async_payment_succeeded':
-        paymentStatus = 'checkout_succeeded'
+        checkoutStatus = 'checkout_succeeded'
         break;
       case 'checkout.session.completed':
-        paymentStatus = 'checkout_completed'
+        checkoutStatus = 'checkout_completed'
         break;
       case 'checkout.session.expired':
-        paymentStatus = 'checkout_expired'
+        checkoutStatus = 'checkout_expired'
         break;
       // Płatność
       case 'payment_intent.canceled':
@@ -192,9 +198,15 @@ exports.api = functions.https.onRequest(app);
 
 
     try {
-      await firestore.collection('orders').doc(customSessionId).update({
-        paymentStatus: paymentStatus
-      });
+      if(checkoutStatus!='none'){
+        await firestore.collection('orders').doc(customSessionId).update({
+          checkoutStatus: checkoutStatus
+        });
+      }else if(paymentStatus!='none'){
+        await firestore.collection('orders').doc(customSessionId).update({
+          paymentStatus: paymentStatus
+        });
+      }
     } catch (error) {
         console.error(`Error updating document: ${error}`);
         res.status(400).send(`Error updating document`);
