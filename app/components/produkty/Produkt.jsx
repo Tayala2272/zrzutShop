@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 export default function Produkt({ price, name, img, id, lang, exchangeRate }){
     const [image,setImage] = useState("")
-    getDownloadURL(ref(storage, "products/"+img)).then(
+    getDownloadURL(ref(storage, "resized_products/"+img+"_500x500.jpeg")).then(
         (res)=>{
             setImage(res)
         }

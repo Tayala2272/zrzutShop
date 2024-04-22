@@ -10,6 +10,7 @@ import { collection, query, getDocs, where, Timestamp } from "firebase/firestore
 import { db } from "../../../firebase";
 
 import { AppContext } from "../../hooks/firebaseContext";
+import { v1 as uuidv1 } from 'uuid';
 
 
 export default function Produkty(){
@@ -18,6 +19,7 @@ export default function Produkty(){
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const { category, subCategory } = useParams();
+    const location = useLocation();
     const [ highestPrice, setHighestPrice] = useState(0)
 
 
@@ -48,6 +50,7 @@ export default function Produkty(){
                 } else if(category){
                     const q = query(collRef, where("category", "==", `${category}/${category}`));
                     await getDocs(q).then((res)=>{
+                        let tmp = [];
                         res.forEach((doc)=>{
                             const price = doc.data().price_USD
                             const name = doc.data().productName
@@ -56,12 +59,14 @@ export default function Produkty(){
                             if(highestPrice<price){
                                 setHighestPrice(price)
                             }
-                            setProducts([...products, {"id":id,"price":price,"name":name,"img":img}])
+                            tmp.push({"id":id,"price":price,"name":name,"img":img})
                         })
+                        setProducts(tmp)
                         setLoading(false)
                     })
                 }else{
                     await getDocs(collRef).then((res)=>{
+                        let tmp = [];
                         res.forEach((doc)=>{
                             const price = doc.data().price_USD
                             const name = doc.data().productName
@@ -70,8 +75,9 @@ export default function Produkty(){
                             if(highestPrice<price){
                                 setHighestPrice(price)
                             }
-                            setProducts([...products, {"id":id,"price":price,"name":name,"img":img}])
+                            tmp.push({"id":id,"price":price,"name":name,"img":img})
                         })
+                        setProducts(tmp)
                         setLoading(false)
                     })
                 }
@@ -81,7 +87,7 @@ export default function Produkty(){
             }
         }
         downloadProduct();
-    }, [category,subCategory]);
+    }, [category,subCategory,location]);
 
     
     return (
@@ -98,7 +104,7 @@ export default function Produkty(){
                         <h2 className="title text-center">Produkty</h2>
                         {loading ? (<>Loading...</>) : products.length > 0 ? (
                         products.map((product) => (
-                            <Produkt key={product.id} price={product.price} name={product.name} img={product.img} id={product.id} lang={lang} exchangeRate={exchangeRates} />
+                            <Produkt key={product.id+uuidv1()} price={product.price} name={product.name} img={product.img} id={product.id} lang={lang} exchangeRate={exchangeRates} />
                         ))
                         ) : (
                         <>Nie znaleziono żadnych produktów</>
