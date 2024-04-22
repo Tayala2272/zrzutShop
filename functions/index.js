@@ -117,11 +117,6 @@ const session = await stripe.checkout.sessions.create({
     metadata: {
       customSessionId: customSessionId
     }
-  },
-  checkout_session_data: {
-    metadata: {
-      customSessionId: customSessionId
-    }
   }
 });
 response.send(JSON.stringify(session.url));
