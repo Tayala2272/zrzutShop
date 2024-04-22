@@ -72,6 +72,14 @@ export default function Add_product(){
         }
 
 
+        function removeFileExtension(filename) {
+            const parts = filename.split('.');
+            
+            if (parts.length === 1) return filename;
+
+            return parts.slice(0, -1).join('.');
+          }
+
     
         const isJpgOrPng = (fileName) => {
             return fileName.endsWith('.jpg') || fileName.endsWith('.png');
@@ -87,10 +95,10 @@ export default function Add_product(){
 
                 // Zapisywanie miniaturki
                     if (isJpgOrPng(thumbnailImage.name)){
-                        const newThumbnailImage = tmp+thumbnailImage.name
+                        const newThumbnailImage = tmp+removeFileExtension(thumbnailImage.name)
                         const storageRef = ref(storage, `products/${tmp}${thumbnailImage.name}`);
                         const metadata = {
-                            contentType: 'image',
+                            contentType: 'image/png',
                         };
                         uploadBytes(storageRef, thumbnailImage, metadata).then((res)=>{console.log(res)})
                         
@@ -100,10 +108,10 @@ export default function Add_product(){
                             Object.values(otherImages).forEach((item)=>{
                                 if (isJpgOrPng(item.name)){
                                     tmp = uuidv4();
-                                    newOtherImages = [...newOtherImages, tmp+item.name]
+                                    newOtherImages = [...newOtherImages, tmp+removeFileExtension(item.name)]
                                     const storageRef = ref(storage, `products/${tmp}${item.name}`);
                                     const metadata = {
-                                        contentType: 'image',
+                                        contentType: 'image/png',
                                     };
                                     uploadBytes(storageRef, item, metadata).catch((error)=>{
                                         console.log(error)

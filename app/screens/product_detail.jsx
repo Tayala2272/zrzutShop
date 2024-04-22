@@ -15,6 +15,10 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import AddToCart from "../components/cart/addToCart";
 
+import angle_left from "../assets/svg/angle-left.svg"
+import angle_right from "../assets/svg/angle-right.svg"
+
+
 
 export default function Product_detail(){
     const { user, lang, exchangeRates } = AppContext()
@@ -47,7 +51,7 @@ export default function Product_detail(){
                     if (docSnap.exists()) {
                         const imageNames = docSnap.data().otherImages;
                         await Promise.all(imageNames.map(async (imageName) => {
-                            const imageUrl = await getDownloadURL(ref(storage, `products/${imageName}`));
+                            const imageUrl = await getDownloadURL(ref(storage, `resized_products/${imageName}_500x500.jpeg`));
                             return imageUrl;
                         })).then(async (imageUrlArray)=>{
                             const tmp = docSnap.data()
@@ -60,7 +64,7 @@ export default function Product_detail(){
                             setSolidPriceUAH((tmp.price_USD * exchangeRates.UAH).toFixed(2))
                             setImages(imageUrlArray)
                             // setStripeId(tmp.stripeID)
-                            await getDownloadURL(ref(storage, `products/${tmp.thumbnailImage}`)).then((tmp)=>{
+                            await getDownloadURL(ref(storage, `resized_products/${tmp.thumbnailImage}_500x500.jpeg`)).then((tmp)=>{
                                 setThumbnailImg(tmp)
                                 setImages([tmp, ...imageUrlArray])
                                 setImage(tmp)
@@ -117,10 +121,10 @@ export default function Product_detail(){
 
                             {/* Controls */}
                             <a className="left item-control" href="#similar-product" data-slide="prev">
-                                <img style={{width:'30px'}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fangle-left.svg?alt=media&token=d8b4437a-9d9f-4574-9e33-1c6bf75a0ab4" alt="arrow"/>
+                                <img style={{width:'30px'}} src={angle_left} alt="arrow"/>
                             </a>
                             <a className="right item-control" href="#similar-product" data-slide="next">
-                                <img style={{width:'30px'}} src="https://firebasestorage.googleapis.com/v0/b/zrzutshop.appspot.com/o/svg%2Fangle-right.svg?alt=media&token=d8b4437a-9d9f-4574-9e33-1c6bf75a0ab4" alt="arrow"/>
+                                <img style={{width:'30px'}} src={angle_right} alt="arrow"/>
                             </a>
                         </div>
 
@@ -163,6 +167,10 @@ export default function Product_detail(){
                 </div>
 
                 <div className="category-tab shop-details-tab">
+
+                    {product && <div dangerouslySetInnerHTML={{ __html: product.opisPL }} ></div>}
+
+
                     <div style={{margin:"110px 0 90px 0"}} id="details">
                         {product &&
                         <table style={styles.table}>

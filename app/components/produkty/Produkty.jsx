@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from "react";
 
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 
 import Sidebar from "../sidebar/sidebar"
 import Produkt from "./Produkt"
 
-import { collection, query, getDocs, where } from "firebase/firestore";
+import { collection, query, getDocs, where, Timestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 import { AppContext } from "../../hooks/firebaseContext";
@@ -24,6 +24,7 @@ export default function Produkty(){
     useEffect(() => {
         async function downloadProduct() {
             try {
+                setProducts([])
                 const collRef = collection(db, "products");
                 if (subCategory) {
                     const q = query(collRef, where("category", "==", `${category}/${subCategory}`));
@@ -44,7 +45,22 @@ export default function Produkty(){
                         setProducts(products);
                         setLoading(false);
                       });
-                } else{
+                } else if(category){
+                    const q = query(collRef, where("category", "==", `${category}/${category}`));
+                    await getDocs(q).then((res)=>{
+                        res.forEach((doc)=>{
+                            const price = doc.data().price_USD
+                            const name = doc.data().productName
+                            const img = doc.data().thumbnailImage
+                            const id = doc.id
+                            if(highestPrice<price){
+                                setHighestPrice(price)
+                            }
+                            setProducts([...products, {"id":id,"price":price,"name":name,"img":img}])
+                        })
+                        setLoading(false)
+                    })
+                }else{
                     await getDocs(collRef).then((res)=>{
                         res.forEach((doc)=>{
                             const price = doc.data().price_USD
@@ -65,7 +81,7 @@ export default function Produkty(){
             }
         }
         downloadProduct();
-    }, []);
+    }, [category,subCategory]);
 
     
     return (
