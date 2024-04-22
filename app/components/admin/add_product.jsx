@@ -49,12 +49,12 @@ export default function Add_product(){
             setMainCategory(tmp);
 
             const subcats = category[tmp];
-            if (typeof subcats === 'object' && subcats !== null) {
+            if (typeof subcats.arrayEN === 'object' && subcats.arrayEN !== null) {
                 // To jest obiekt, więc przekształć go w tablicę
-                setSubcategories(Object.values(subcats));
+                setSubcategories(Object.values(subcats.arrayEN));
             } else {
                 // To jest pojedyncza wartość, ustaw ją bezpośrednio
-                setSubcategories([subcats]);
+                setSubcategories([subcats.arrayEN]);
             }
         };
         
@@ -130,7 +130,7 @@ export default function Add_product(){
                                     "price_USD":cenaUsd,
 
                                     "brand":brand,
-                                    "category":MainCategory,
+                                    "category":tmpCategory,
                                     "thumbnailImage":newThumbnailImage,
                                     "otherImages":newOtherImages,
                                     "details":details
@@ -169,7 +169,7 @@ export default function Add_product(){
             setDetails([...details, { title: '', content: '' }]);
         };
 
-
+        // Zrób dodawanie produktu, aby się dodawał z prawidłową kategorią (id/en), a następnie wyświetlanie produktów według kategorii
     return (
         <>
             {admin && <>
@@ -203,8 +203,8 @@ export default function Add_product(){
                         <label>Kategoria: 
                         <select value={MainCategory} onChange={(e) => handleCategoryChange(e)} required>
                             <option value="" disabled defaultValue={true}>Wybierz kategorie</option>
-                            {Object.keys(category).map((category) => (
-                                <option key={category} value={category}>{category}</option>
+                            {category && Object.entries(category).map((value) => (
+                                <option key={value[0]} value={value[0]}>{value[1].textEN}</option>
                             ))}
                         </select>
                         <br/><br/>
@@ -213,7 +213,7 @@ export default function Add_product(){
                             <label htmlFor="subcategorySelect">Wybierz podkategorię:</label>
                             <select id="subcategorySelect" onChange={(e) => setSubCategory(e.target.value)}>
                                 {subcategories.map((subcat, index) => (
-                                <option key={index} value={subcat}>{subcat}</option>
+                                <option key={index} value={index}>{subcat}</option>
                                 ))}
                             </select>
                             </div>

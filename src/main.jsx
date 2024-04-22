@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter,  Route, Routes } from 'react-router-dom';
 
 // Language
-  import "../app/lang/language.js"
+import "../app/lang/language.js"
 
 // Elements
-  import Navbar from '../app/components/navbar';
-  import Footer from '../app/components/footer';
+import Navbar from '../app/components/navbar';
+import Footer from '../app/components/footer';
 
 // strony
   import Index from '../app/screens'
@@ -19,6 +19,7 @@ import { BrowserRouter,  Route, Routes } from 'react-router-dom';
   import Chat from '../app/screens/chat';
   import Product_detail from '../app/screens/product_detail';
   import Add_product from '../app/components/admin/add_product';
+  import Add_category from '../app/components/admin/add_category.jsx';
   import Shop from '../app/screens/shop';
   import About from '../app/screens/about';
   import Account from '../app/screens/account.jsx';
@@ -71,6 +72,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/product/:productId" element={<Product_detail />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/add-product" element={<Add_product />} />
+          <Route path="/add-category" element={<Add_category />} />
           <Route path="*" element={<Error />} />
         </Routes>
         <Footer/>

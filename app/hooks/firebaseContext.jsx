@@ -125,15 +125,30 @@
             const [ category, setCategory ] = useState(null)
             useEffect(() => {
                 async function kategorie(){
+                    // sessionStorage.removeItem('categories', null);
                     if(sessionStorage.getItem('categories')==null){
                         const categories = await getDocs(collection(db, "categories"));
                         const tmp = {};
                         categories.forEach((doc) => {
-                            if(typeof doc.data().array==='object'){
-                                tmp[doc.data().text] = {...doc.data().array};
+                            if(typeof doc.data().arrayEN==='object'){
+                                tmp[doc.id] = {
+                                    "textEN":doc.data().textEN,
+                                    "textPL":doc.data().textPL,
+                                    "textUA":doc.data().textUA,
+                                    "arrayEN": {...doc.data().arrayEN},
+                                    "arrayPL": {...doc.data().arrayPL},
+                                    "arrayUA": {...doc.data().arrayUA}
+                                }
                             }
                             else{
-                                tmp[doc.data().text] = doc.data().array;
+                                tmp[doc.id] = {
+                                    "textEN":doc.data().textEN,
+                                    "textPL":doc.data().textPL,
+                                    "textUA":doc.data().textUA,
+                                    "arrayEN": doc.data().arrayEN,
+                                    "arrayPL": doc.data().arrayPL,
+                                    "arrayUA": doc.data().arrayUA
+                                }
                             }
                         });
                         sessionStorage.setItem('categories', JSON.stringify(tmp));
