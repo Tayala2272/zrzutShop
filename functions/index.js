@@ -27,6 +27,96 @@ const endpointSecret = 'whsec_Z5oVtwpPCKHAllnKNgAcLHKBRr6rsLnq'
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const axios = require('axios');
+const sharp = require('sharp');
+const { v4: uuidv4 } = require('uuid');
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getStorage } = require('firebase-admin/storage');
+const { getFirestore } = require('firebase-admin/firestore');
+
+// Inicjalizacja Firebase Admin
+const serviceAccount = require('./apikey.json');
+
+initializeApp({
+  credential: cert(serviceAccount),
+  storageBucket: 'https://zrzutshop-default-rtdb.europe-west1.firebasedatabase.app'
+});
+
+const db = getFirestore();
+const storage = getStorage();
+const bucket = storage.bucket();
+
+
+
+
+app.post('/create-products', async (req, res) => {
+
+  const body = req.body;
+  const { en } = req.body;
+    
+  try {
+      // Dodawanie produktu do Firestore
+      const productRef = await db.collection('products').add({
+          productNameEN: body.en.name,
+          productNamePL: body.pl.name,
+          productNameUA: body.ua.name,
+          price_USD: body.en.price,
+          category: body.en.categoryId,
+          imageUrl: []
+      });
+
+      // Pobieranie i zapisywanie obrazów
+      const imageUrls = await Promise.all(en.images.map(async (imgUrl) => {
+          const response = await axios.get(imgUrl, { responseType: 'arraybuffer' });
+          const buffer = Buffer.from(response.data, 'utf-8');
+          const filename = `products/${productRef.id}/${imgUrl.split('/').pop()}`;
+          const file = storage.bucket('zrzutshop.appspot.com').file(filename);
+          await file.save(buffer, {
+              metadata: { contentType: 'image/jpeg' },
+              public: true,
+              validation: 'md5'
+          });
+          return file.publicUrl();
+      }));
+
+      // Aktualizacja produktu z URL obrazów
+      await productRef.update({ imageUrl: imageUrls });
+
+      res.send({ success: true, productID: productRef.id, images: imageUrls });
+  } catch (error) {
+      console.error("Error adding product: ", error);
+      res.status(500).send("Error adding product");
+  }
+});
+
+
+
+
+
+
 app.post('/create-checkout-session/:methods/:id', async (req, response) => {
 const methods = [req.params.methods]
 const customSessionId = req.params.id

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "zrzutshop",
+  "private_key_id": "83031cabb7c1cda8af4f50929bdf408033299e63",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCKSfcfen1Byl73\nygiIDq+mY5mH23JXdonuuuEpfQoAP2pkrKiE7cMVwzXKTHypKem7Em380ZzeUC/K\nPD+YgT5OhVfSsvTNut6zyvFEeGnbyPJ3a6f6EjnQy0KsyTMDZVUPBFiCPxGSozQ2\nOgFAASvCGM8UBHLMJTvQNGiGeVaCTIL8BoI+G43oBG9ut1q3thdxmL5pWYagtzdV\nQQ3utBHaJKcfNc0cLPl8pf9FWqfTpyWhwMvKEvbMtZ1KImY9+KTwuGUi35SmjIZz\nOhqVhNmVfzkXcwZL2GpZqJC+ZmV/YGnbfFTRyOwMbJ3Fy7rcJXqw0KqJZ0UXuy4s\n8rXyzfuTAgMBAAECggEAOmKXFPG8r4m3BcwFRRhaPZhAinTytg2kl6fMB520mr0r\neLzS22ic3HPSIoqfeTZqaaKS0FJZdh0JyEsemI88lJ9EoH8Qz0lN3D/bFEr4eqRB\nBn1r6q9GPKqMiHHb+VuPiWsOyVLCYxRHp3te6rxz0ptx1mQ4aYtw0OtHlDrndNQk\n7jfoTffYkxI1UlomYr4Gy+8oqm7JWd3e68tWhbJVT5FOBDNaoyNdv+6g6nKQNU6p\n6/H79b4uOFN2P/glldf5m7S2cVMI9Pm5EJtF7XmdfCFM+BhinBP0XvhbICISMRwF\nmxcecOTpGr2B/6fefHkiiyYLQBgqa8/3wkluGkuYnQKBgQDAy2A9r+k/vIfYuAQD\nJs4yfkqo8sW8BBFl1ErWn841DdW68OHI65oZwGzvrknEa92cgqcWc7wHIhB2T9A3\nmdyI+yrt04xNEkTVlZ92BZjEECpp0DmcCrKicEZbo3QdxEyjurXbkLI1U/QFFYDI\ntNOxN6J1Q8T+/ZsN6RXLeyiRrQKBgQC3oB1/umpUsX7ez1DhH0JIMpp6KpvqsShS\nGe7aZN5GlkxdFXgWSD/uJH/Zj90JzXy0UYB9i5Md2SPC7Tdn/XTYoVeLLHfmu67T\n8RmEHOeezPoErD+5GwTsNB11hwlVVZIkKjvDBCbAkWmWXpbIpUozPYbpx0w3Mnpb\nK65RopLqPwKBgAj+M5oNB5NKhwer5bwD5mBilbb1xBV2Fx2p3mfOgn7lC1AyBkYp\n/0EuQaaYeaZo5ah0S7j3YxDuHNh39p1xVuEo3iLD2GqL7JwN46dMsYiLvH69EMLf\nmN+M3ytNH5B35J9KiUsZn8ZvCRXnn9882BcPIkvYAmtmhwIKGlMohobtAoGAfs55\n0J0hlP9GSAQPLIfzs/wOJdOK/NX+rEPwaK1DuqdMcPPEjE60p3ZZPBtXX8+iELw/\n6XMb038CbTh4DL5BlOBGnnvFCXgO0ZosLsnvQgD3n4Z8Mw5vpdaPiXwJe/6t/3+S\n6afSQyWoLwl/Q2yyAxS4OHVDMtMPICrYJNQKdO0CgYEAqtEHweIoVTPMOmeZ6m3J\nY3TLlPWXeGDKkJ1w/2Ev25no8syKmV/jBex2H1OtzDOLKjmKa8N4rEGsXgAj91qT\nRQbXxs7OmjTnLqsuag6RY4tuU4lL+0IIVHG2/SGuqv/NVJgpyCX2afeYTio5AwDf\nSTXgFlb0ArW9kd+ccwvOcL8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-ff2nr@zrzutshop.iam.gserviceaccount.com",
+  "client_id": "115194104068904380263",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ff2nr%40zrzutshop.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

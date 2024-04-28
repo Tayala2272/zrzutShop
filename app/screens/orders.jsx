@@ -77,12 +77,14 @@ export default function Orders(){
                                     {/* Nie zapłacono jeszcze */}
                                         {x.paymentStatus=="none" ? <>
                                             <button onClick={()=>payment(user,lang,exchangeRates,'card',x.id)}>Zapłać kartą</button>
-                                            <button onClick={()=>payment(user,lang,exchangeRates,'paypal',x.id)}>Zapłać Paypal</button></> : <></>}
+                                            <button onClick={()=>payment(user,lang,exchangeRates,'paypal',x.id)}>Zapłać Paypal</button>
+                                            <button onClick={()=>payment(user,lang,exchangeRates,'blik',x.id)}>Zapłać Blik</button></> : <></>}
 
                                     {/* Przetwarzanie płatności */}
                                         {x.paymentStatus=="checkout_expired" ? <>
                                             <button onClick={()=>payment(user,lang,exchangeRates,'card',x.id)}>Zapłać kartą</button>
-                                            <button onClick={()=>payment(user,lang,exchangeRates,'paypal',x.id)}>Zapłać Paypal</button></> : <></>}
+                                            <button onClick={()=>payment(user,lang,exchangeRates,'paypal',x.id)}>Zapłać Paypal</button>
+                                            <button onClick={()=>payment(user,lang,exchangeRates,'blik',x.id)}>Zapłać Blik</button></> : <></>}
 
                                     {/* Zapłacono */}
                                         {x.paymentStatus=="checkout_succeeded"? <>Przetwarzanie płatności</> : <></>}
@@ -93,7 +95,8 @@ export default function Orders(){
                                     {/* payment_failed */}
                                         {x.paymentStatus=="checkout_failed"? <>
                                             <button onClick={()=>payment(user,lang,exchangeRates,'card',x.id)}>Zapłać kartą</button>
-                                            <button onClick={()=>payment(user,lang,exchangeRates,'paypal',x.id)}>Zapłać Paypal</button></> : <></>}
+                                            <button onClick={()=>payment(user,lang,exchangeRates,'paypal',x.id)}>Zapłać Paypal</button>
+                                            <button onClick={()=>payment(user,lang,exchangeRates,'blik',x.id)}>Zapłać Blik</button></> : <></>}
 
 
                                     {/* payment_failed */}

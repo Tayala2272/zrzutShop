@@ -92,13 +92,13 @@ export default function Product_detail(){
     function handleSubmit(event){
         event.preventDefault()
         if(lang=="pl"){
-            AddToCart(productId,amount,user,(pricePLN/exchangeRates.PLN).toFixed(2),product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+            AddToCart(productId,amount,user,(pricePLN/exchangeRates.PLN).toFixed(2),product.productNamePL,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
         }
         if(lang=="en"){
-            AddToCart(productId,amount,user,priceUSD.toFixed(2),product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+            AddToCart(productId,amount,user,priceUSD,product.productNameEN,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
         }
         if(lang=="ua"){
-            AddToCart(productId,amount,user,(priceUAH/exchangeRates.UAH).toFixed(2),product.productName,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
+            AddToCart(productId,amount,user,(priceUAH/exchangeRates.UAH).toFixed(2),product.productNameUA,thumbnailImg).then(res=>alert(res)).catch(err=>alert(err))
         }
     }
 
