@@ -172,7 +172,7 @@ export default function Product_detail(){
 
 
                     <div style={{margin:"110px 0 90px 0"}} id="details">
-                        {product &&
+                        {product && product.details &&
                         <table style={styles.table}>
                             <thead>
                                 <tr>
@@ -181,19 +181,19 @@ export default function Product_detail(){
                                 </tr>
                             </thead>
                             <tbody>
-                                {product && lang=="pl" && product.details.map((item) => (
+                                {lang=="pl" && product.details.length>0 && product.details.map((item) => (
                                     <tr key={item.titlePL} style={styles.tr}>
                                         <td style={{...styles.td,textAlign:"right"}}>{item.titlePL}</td>
                                         <td style={styles.td}>{item.contentPL}</td>
                                     </tr>
                                 ))}
-                                {product && lang=="en" && product.details.map((item) => (
+                                {lang=="en" && product.details.length>0 && product.details.map((item) => (
                                     <tr key={item.titleEN} style={styles.tr}>
                                         <td style={{...styles.td,textAlign:"right"}}>{item.titleEN}</td>
                                         <td style={styles.td}>{item.contentEN}</td>
                                     </tr>
                                 ))}
-                                {product && lang=="ua" && product.details.map((item) => (
+                                {lang=="ua" && product.details.length>0 && product.details.map((item) => (
                                     <tr key={item.titleUA} style={styles.tr}>
                                         <td style={{...styles.td,textAlign:"right"}}>{item.titleUA}</td>
                                         <td style={styles.td}>{item.contentUA}</td>

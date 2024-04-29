@@ -7,13 +7,13 @@ import { Link } from "react-router-dom";
 
 // Create a reference with an initial file path and name
 
-export default function Produkt({ price, name, img, id, lang, exchangeRate }){
+export default function Produkt({ price, nameEN, namePL, nameUA, img, id, lang, exchangeRate }){
     const [image,setImage] = useState("")
-    getDownloadURL(ref(storage, "resized_products/"+img+"_500x500.jpeg")).then(
+    getDownloadURL(ref(storage, "products/resized_products/"+img+"_500x500.jpeg")).then(
         (res)=>{
             setImage(res)
         }
-    )
+    ).catch(()=>{console.log("brak zdjecia")})
     return (
         <div className="col-sm-4 zoomIn" style={{}}>
             <Link to={"/product/"+id}>
@@ -22,7 +22,7 @@ export default function Produkt({ price, name, img, id, lang, exchangeRate }){
                     <div className="productinfo text-center">
                         <img src={image} alt="" />
                         <h2 style={{color:"black"}}>{lang=="pl" && (price*exchangeRate.PLN).toFixed(2)+"zł"}{lang=="en" && price+"$"}{lang=="ua" && (price*exchangeRate.UAH).toFixed(2)+"₴"}</h2>
-                        <p>{name}</p>
+                        <p>{lang=="pl" && <>{namePL}</>}{lang=="en" && <>{nameEN}</>}{lang=="ua" && <>{nameUA}</>}</p>
                         {/* <a href="" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart"></i>Add to cart</a> */}
                     </div>
                     </div>

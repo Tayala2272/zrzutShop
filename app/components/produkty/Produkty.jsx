@@ -6,7 +6,7 @@ import { useParams, useLocation } from 'react-router-dom'
 import Sidebar from "../sidebar/sidebar"
 import Produkt from "./Produkt"
 
-import { collection, query, getDocs, where, Timestamp } from "firebase/firestore";
+import { collection, query, getDocs, where, limit, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 import { AppContext } from "../../hooks/firebaseContext";
@@ -22,70 +22,100 @@ export default function Produkty(){
     const location = useLocation();
     const [ highestPrice, setHighestPrice] = useState(0)
 
+    const [maxProducts,setMax] = useState(20)
+
 
     useEffect(() => {
         async function downloadProduct() {
+            // try {
+            //     const productsRef = collection(db, 'products');
+            //     const q = query(productsRef, limit(5), where('category','==','xwdpdXACUXsGKTkQcz2H/xwdpdXACUXsGKTkQcz2H'));
+            //     await getDocs(q).then((res)=>{
+            //         setLoading(false)
+            //         res.forEach((doc) => {
+            //             console.log(doc.id, " => ", doc.data());
+            //             // const productsData = res.docs.map(doc => ({
+            //             //   id: doc.id,
+            //             //   ...doc.data()
+            //             // }))
+            //             tmp.push(doc.id)
+            //         });
+            //     }).then(()=>{
+            //         console.log(tmp)
+            //         // setProducts(tmp);
+            //     });
+
+            //   } catch (error) {
+            //     console.error("Error fetching products: ", error);
+            //   }
             try {
                 setProducts([])
+                console.log('new')
                 const collRef = collection(db, "products");
                 if (subCategory) {
-                    const q = query(collRef, where("category", "==", `${category}/${subCategory}`));
-                    await getDocs(q).then((querySnapshot) => {
-                        const products = [];
-                  
-                        querySnapshot.forEach((doc) => {
-                            const price = doc.data().price_USD;
-                            const name = doc.data().productName;
-                            const img = doc.data().thumbnailImage;
-                            const id = doc.id;
-                            if(highestPrice<price){
-                                setHighestPrice(price)
+                    await getDocs(query(collRef, limit(maxProducts), where("category", "==", `${category}/${subCategory}`))).then((res) => {
+                        let tmp = [];
+                        if(res.docs){
+                            if(res.docs.length>0){
+
+                                res.forEach((doc) => {
+                                    if(tmp.length<maxProducts){
+                                        const prod = doc.data()
+                                        // if(highestPrice<price){
+                                        //     setHighestPrice(price)
+                                        // }
+                                        tmp.push({"id":doc.id,"price":prod.price_USD,"nameEN":prod.productNameEN,"namePL":prod.productNamePL,"nameUA":prod.productNameUA,"img":prod.thumbnailImage})
+                                    }
+                                });
+                                setProducts(tmp);
                             }
-                            products.push({ id, price, name, img });
-                        });
-                  
-                        setProducts(products);
+                        }
                         setLoading(false);
                       });
                 } else if(category){
-                    const q = query(collRef, where("category", "==", `${category}/${category}`));
-                    await getDocs(q).then((res)=>{
+                    await getDocs(query(collRef, limit(maxProducts), where("category", "==", `${category}/${category}`))).then((res)=>{
                         let tmp = [];
-                        res.forEach((doc)=>{
-                            const price = doc.data().price_USD
-                            const name = doc.data().productName
-                            const img = doc.data().thumbnailImage
-                            const id = doc.id
-                            if(highestPrice<price){
-                                setHighestPrice(price)
+                        if(res.docs){
+                            if(res.docs.length>0){
+
+                                res.forEach((doc) => {
+                                    if(tmp.length<maxProducts){
+                                        const prod = doc.data()
+                                        // if(highestPrice<price){
+                                        //     setHighestPrice(price)
+                                        // }
+                                        tmp.push({"id":doc.id,"price":prod.price_USD,"nameEN":prod.productNameEN,"namePL":prod.productNamePL,"nameUA":prod.productNameUA,"img":prod.thumbnailImage})
+                                    }
+                                });
+                                setProducts(tmp);
                             }
-                            tmp.push({"id":id,"price":price,"name":name,"img":img})
-                        })
-                        setProducts(tmp)
-                        setLoading(false)
+                        }
+                        setLoading(false);
                     })
                 }else{
-                    await getDocs(collRef).then((res)=>{
-                        let tmp = [];
-                        res.forEach((doc)=>{
-                            const price = doc.data().price_USD
-                            const name = doc.data().productName
-                            const img = doc.data().thumbnailImage
-                            const id = doc.id
-                            if(highestPrice<price){
-                                setHighestPrice(price)
-                            }
-                            tmp.push({"id":id,"price":price,"name":name,"img":img})
-                        })
-                        setProducts(tmp)
-                        setLoading(false)
-                    })
+                    console.log('all')
+                    setLoading(false)
+                    // await getDocs(query(collRef,limit(maxProducts))).then((res)=>{
+                    //     let tmp = [];
+                    //     res.forEach((doc)=>{
+                    //         if(tmp.length<maxProducts){
+                    //             const prod = doc.data()
+                    //             // if(highestPrice<price){
+                    //             //     setHighestPrice(price)
+                    //             // }
+                    //             tmp.push({"id":doc.id,"price":prod.price_USD,"nameEN":prod.productNameEN,"namePL":prod.productNamePL,"nameUA":prod.productNameUA,"img":prod.thumbnailImage})
+                    //         }
+                    //     })
+                    //     setProducts(tmp)
+                    //     setLoading(false)
+                    // })
                 }
             } catch (error) {
                 console.error("Error downloading products:", error);
                 // Consider displaying a user-friendly error message in your UI
             }
         }
+        setLoading(true)
         downloadProduct();
     }, [category,subCategory,location]);
 
@@ -104,7 +134,7 @@ export default function Produkty(){
                         <h2 className="title text-center">Produkty</h2>
                         {loading ? (<>Loading...</>) : products.length > 0 ? (
                         products.map((product) => (
-                            <Produkt key={product.id+uuidv1()} price={product.price} name={product.name} img={product.img} id={product.id} lang={lang} exchangeRate={exchangeRates} />
+                            <Produkt key={product.id+uuidv1()} price={product.price} nameEN={product.nameEN} namePL={product.namePL} nameUA={product.nameUA} img={product.img} id={product.id} lang={lang} exchangeRate={exchangeRates} />
                         ))
                         ) : (
                         <>Nie znaleziono żadnych produktów</>
