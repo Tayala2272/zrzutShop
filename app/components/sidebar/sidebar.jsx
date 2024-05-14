@@ -3,13 +3,26 @@
 import Categories from '../sidebar/categories';
 
 import Slider from '@mui/material/Slider';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
-export default function Sidebar({max}){
+export default function Sidebar({max, lang, exchangeRates, returnMaxPrice}){
+    const [maxPrice, setMaxPrice] = useState(0)
+
     function roundUpTo10(liczba) {
         return Math.ceil(liczba / 10) * 10;
     }
-    const endMax = roundUpTo10(max)
+    useEffect(()=>{
+        if(lang=='pl'){
+            setMaxPrice(roundUpTo10((max)*exchangeRates.PLN))
+        }
+        else if(lang=='ua'){
+            setMaxPrice(roundUpTo10((max)*exchangeRates.UAH))
+        }
+        else{
+            setMaxPrice(roundUpTo10((max)))
+        }
+    },[max,lang])
 
     return (
         <div className="col-sm-3">
@@ -32,18 +45,12 @@ export default function Sidebar({max}){
                 <div className="price-range">
                     <h2>Zakres Ceny</h2>
                     <div className="well">
-                    <Slider
-                        aria-label="Temperature"
-                        defaultValue={endMax}
-                        getAriaValueText={(val)=>{return val}}
-                        valueLabelDisplay="auto"
-                        shiftStep={30}
-                        step={10}
-                        min={0}
-                        max={endMax}
-                    />
+                    {maxPrice!=0 ? 
+                        <>Filtr ceny</>
+                        :<>Loading</>
+                    }
                     <br />
-                    <b>0 zł</b> <b className="pull-right">{endMax} zł</b>
+                    <b>0 zł</b> <b className="pull-right">{maxPrice} {lang && lang=="pl" && <>zł</>}{lang && lang=="ua" && <>₴</>}{lang && lang=="en" && <>$</>}</b>
                     </div>
                 </div>
                 <div className="shipping text-center">

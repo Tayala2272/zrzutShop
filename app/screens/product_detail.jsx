@@ -27,7 +27,6 @@ export default function Product_detail(){
     const [ images, setImages] = useState([]);
     const [ product, setProduct ] = useState()
     const [ amount, setAmount ] = useState(1)
-    const [ stripeId, setStripeId ] = useState('')
 
     const [ SolidpricePLN, setSolidPricePLN ] = useState(0)
     const [ SolidpriceUSD, setSolidPriceUSD ] = useState(0)
@@ -46,12 +45,12 @@ export default function Product_detail(){
         async function downloadProduct() {
             if(exchangeRates && productId){
                 try {
-                    const docRef = doc(db, "products", productId);
+                    const docRef = doc(db, "product-details", productId);
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         const imageNames = docSnap.data().otherImages;
                         await Promise.all(imageNames.map(async (imageName) => {
-                            const imageUrl = await getDownloadURL(ref(storage, `resized_products/${imageName}_500x500.jpeg`));
+                            const imageUrl = await getDownloadURL(ref(storage, `products/resized_products/${imageName}_500x500.jpeg`));
                             return imageUrl;
                         })).then(async (imageUrlArray)=>{
                             const tmp = docSnap.data()
@@ -63,13 +62,9 @@ export default function Product_detail(){
                             setSolidPricePLN((tmp.price_USD * exchangeRates.PLN).toFixed(2))
                             setSolidPriceUAH((tmp.price_USD * exchangeRates.UAH).toFixed(2))
                             setImages(imageUrlArray)
-                            // setStripeId(tmp.stripeID)
-                            await getDownloadURL(ref(storage, `resized_products/${tmp.thumbnailImage}_500x500.jpeg`)).then((tmp)=>{
-                                setThumbnailImg(tmp)
-                                setImages([tmp, ...imageUrlArray])
-                                setImage(tmp)
-                                setLoading(false)
-                            })
+                            setThumbnailImg(imageUrlArray[0])
+                            setImage(imageUrlArray[0])
+                            setLoading(false)
                         });
                     } else {
                         navigate('/error/'+productId)
@@ -168,7 +163,10 @@ export default function Product_detail(){
 
                 <div className="category-tab shop-details-tab">
 
-                    {product && <div dangerouslySetInnerHTML={{ __html: product.opisPL }} ></div>}
+                    {product && lang=="pl" && <div dangerouslySetInnerHTML={{ __html: product.opisPL }} ></div>}
+                    {product && lang=="en" && <div dangerouslySetInnerHTML={{ __html: product.opisEN }} ></div>}
+                    {product && lang=="ua" && <div dangerouslySetInnerHTML={{ __html: product.opisUA }} ></div>}
+
 
 
                     <div style={{margin:"110px 0 90px 0"}} id="details">

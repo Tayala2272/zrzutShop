@@ -171,20 +171,11 @@ app.post('/create-products', async (req, res) => {
           productNamePL: body.pl.name,
           productNameUA: body.ua.name,
 
-          opisEN:body.en.description,
-          opisPL:body.pl.description,
-          opisUA:body.ua.description,
-
           price_USD: (body.en.price/39.70).toFixed(2),
-
-          brand:"",
 
           category: category+"/"+category,
 
-          otherImages: [],
           thumbnailImage:"",
-          
-          detail: []
       });
 
       // Pobieranie i zapisywanie obrazów
@@ -209,10 +200,33 @@ app.post('/create-products', async (req, res) => {
 
       // Aktualizacja produktu z URL obrazów
       let firstElement = zdjecia[0]
-      zdjecia.shift()
-      await productRef.update({ otherImages: zdjecia, thumbnailImage: firstElement });
+      await productRef.update({ thumbnailImage: firstElement });
+      
+      db.collection("product-details").doc(productRef.id).set({
+        opisEN:body.en.description,
+        opisPL:body.pl.description,
+        opisUA:body.ua.description,
 
-      res.send({ success: true, productID: productRef.id, images: imageUrls });
+        productNameEN: body.en.name,
+        productNamePL: body.pl.name,
+        productNameUA: body.ua.name,
+
+        price_USD: (body.en.price/39.70).toFixed(2),
+
+        category: category+"/"+category,
+
+        brand:"",
+        otherImages: zdjecia,
+        detail: []
+      })
+      .then(() => {
+        // res.send({ success: true, productID: productRef.id, images: imageUrls });
+        res.send("Upload Successfull")
+      }).catch((error) => {
+        res.send({ success: false, error: error });
+      });
+
+      // res.send({ success: true, productID: productRef.id, images: imageUrls });
   } catch (error) {
       console.error("Error adding product: ", error);
       res.status(500).send("Error adding product");
